@@ -1,0 +1,32 @@
+{
+  "name": "crowdqueue-server",
+  "version": "1.0.0",
+  "description": "CrowdQueue API Server",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "mongoose": "^8.8.0",
+    "ioredis": "^5.4.0",
+    "socket.io": "^4.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "joi": "^17.13.0",
+    "winston": "^3.14.0",
+    "morgan": "^1.10.0",
+    "cors": "^2.8.5",
+    "helmet": "^8.0.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "express-rate-limit": "^7.4.0",
+    "rate-limit-redis": "^4.2.0",
+    "bullmq": "^5.20.0",
+    "web-push": "^3.6.7",
+    "dotenv": "^16.4.5",
+    "@socket.io/redis-adapter": "^8.3.0"
+  }
+}

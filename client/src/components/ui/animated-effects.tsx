@@ -1,0 +1,94 @@
+"use client";
+import { useEffect, useRef } from "react";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { cn } from "@/lib/utils";
+
+export function AnimatedCounter({
+  value,
+  className,
+  suffix = "",
+  prefix = "",
+  decimals = 0,
+}: {
+  value: number;
+  className?: string;
+  suffix?: string;
+  prefix?: string;
+  decimals?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, {
+    damping: 60,
+    stiffness: 100,
+  });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView) {
+      motionValue.set(value);
+    }
+  }, [motionValue, isInView, value]);
+
+  useEffect(() => {
+    return springValue.on("change", (latest) => {
+      if (ref.current) {
+        ref.current.textContent = Intl.NumberFormat("en-US", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(latest);
+      }
+    });
+  }, [springValue, decimals]);
+
+  return (
+    <span className={cn("tabular-nums inline-flex items-baseline", className)}>
+      {prefix && <span>{prefix}</span>}
+      <span ref={ref}>
+        {Intl.NumberFormat("en-US", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(0)}
+      </span>
+      {suffix && <span>{suffix}</span>}
+    </span>
+  );
+}
+
+export function Meteors({ number = 15 }: { number?: number }) {
+  const meteors = new Array(number).fill(true);
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {meteors.map((_, idx) => (
+        <span
+          key={idx}
+          className="absolute h-0.5 w-0.5 rounded-full bg-white shadow-[0_0_0_1px_#ffffff10] rotate-[215deg]"
+          style={{
+            top: 0,
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 1}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`,
+            animation: `meteor ${Math.random() * 3 + 2}s linear ${Math.random() * 1}s infinite`,
+          }}
+        >
+          <style jsx>{`
+            @keyframes meteor {
+              0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+              70% { opacity: 1; }
+              100% { transform: rotate(215deg) translateX(-600px); opacity: 0; }
+            }
+            span::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 50px;
+              height: 1px;
+              background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent);
+            }
+          `}</style>
+        </span>
+      ))}
+    </div>
+  );
+}

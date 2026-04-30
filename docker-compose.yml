@@ -1,0 +1,99 @@
+version: '3.9'
+
+services:
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - client
+      - server
+    networks:
+      - crowdqueue-net
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost/api/v1
+      - NEXT_PUBLIC_SOCKET_URL=http://localhost
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+    networks:
+      - crowdqueue-net
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/crowdqueue
+      - REDIS_URL=redis://redis:6379
+      - CLIENT_URL=http://localhost:3000
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - JWT_REFRESH_EXPIRES_IN=${JWT_REFRESH_EXPIRES_IN}
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+      - VAPID_EMAIL=${VAPID_EMAIL}
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+      - ./server/src:/app/src
+    deploy:
+      replicas: 2
+    networks:
+      - crowdqueue-net
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/crowdqueue
+      - REDIS_URL=redis://redis:6379
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+      - VAPID_EMAIL=${VAPID_EMAIL}
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - crowdqueue-net
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    environment:
+      - MONGO_INITDB_DATABASE=crowdqueue
+    ports:
+      - "27017:27017"
+    networks:
+      - crowdqueue-net
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - crowdqueue-net
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  crowdqueue-net:
+    driver: bridge
