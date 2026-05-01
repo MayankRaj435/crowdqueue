@@ -1,57 +1,194 @@
-# 🚦 CrowdQueue
+<div align="center">
 
-### *Skip the Line. Not the Service.*
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=CrowdQueue&fontSize=80&fontAlignY=35&desc=The%20Ultimate%20Real-Time%20Virtual%20Queue%20System&descAlignY=55&descSize=20" width="100%" alt="CrowdQueue Banner"/>
 
-A hyperlocal, real-time virtual queue management system that eliminates physical waiting at hospitals, government offices, banks, and more.
+  <br />
+
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+  [![Next.js](https://img.shields.io/badge/Next.js-16.2-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![Node.js](https://img.shields.io/badge/Node.js-Express-339933.svg?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+  [![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248.svg?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+  [![Redis](https://img.shields.io/badge/Redis-BullMQ-DC382D.svg?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+  [![Socket.io](https://img.shields.io/badge/Socket.io-Realtime-010101.svg?style=for-the-badge&logo=socketdotio&logoColor=white)](https://socket.io/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+  <br />
+
+  > **Eliminate physical lines. Empower your organization.**  
+  > *A high-performance platform designed to handle large crowds, reduce wait times, and optimize user flows seamlessly.*
+
+</div>
 
 ---
 
-## Tech Stack
+## ⚡ Overview
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 15, TailwindCSS, Framer Motion, Aceternity UI |
-| Backend | Node.js 20, Express.js, Socket.io |
-| Database | MongoDB 7 (Mongoose) |
-| Cache | Redis 7 (ioredis) |
-| Jobs | BullMQ |
-| Infra | Docker Compose, Nginx |
+**CrowdQueue** is a high-performance, real-time queue management platform built to scale. Whether you're managing a busy restaurant, a large event, or a vital service center, CrowdQueue provides a frictionless virtual waiting experience. 
 
-## Quick Start
+Empower your organization with live updates, dynamic staff dashboards, robust analytics, and automated multi-channel notifications.
 
-```bash
-# 1. Clone and configure
-cp .env.example .env
-# Edit .env with your secrets
+---
 
-# 2. Start all services
-docker-compose up --build
+## ✨ Peak Detailing & Features
 
-# 3. Seed super admin
-cd server && node src/seed.js
+<table>
+  <tr>
+    <td width="50%">
+      <h3>🔄 Real-Time Synchronization</h3>
+      <p>Instant queue updates across all client devices and staff dashboards using <b>Socket.io</b> backed by a <b>Redis Adapter</b> for true horizontal scalability.</p>
+    </td>
+    <td width="50%">
+      <h3>👥 Robust Staff Management</h3>
+      <p>Role-based access control (RBAC) allows administrators to delegate queue management to staff members securely and seamlessly.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>📊 Smart Analytics</h3>
+      <p>Deep dive into your organization's performance with interactive charts powered by <b>Recharts</b>, tracking peak hours, average wait times, and throughput.</p>
+    </td>
+    <td>
+      <h3>🗺️ Geospatial Tracking</h3>
+      <p>Integrated <b>React-Leaflet</b> maps for plotting queue locations, helping users easily find the nearest available services.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>📱 Multi-Channel Notifications</h3>
+      <p>Keep your users continuously informed via <b>SMS (Twilio)</b> and <b>Web Push Notifications</b> whenever their turn approaches.</p>
+    </td>
+    <td>
+      <h3>⚙️ Background Jobs</h3>
+      <p>Offload heavy tasks and scheduled notifications utilizing robust queues via <b>BullMQ</b> and <b>Redis</b>.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>🔲 Frictionless Onboarding</h3>
+      <p>Scan-to-join printable QR Codes dynamically generated on the fly with <b>qrcode.react</b>.</p>
+    </td>
+    <td>
+      <h3>🎨 Premium Aesthetics</h3>
+      <p>Fully responsive, sleek UI utilizing <b>Tailwind CSS v4</b> and fluid micro-interactions powered by <b>Framer Motion</b>.</p>
+    </td>
+  </tr>
+</table>
 
-# 4. Open
-# App:  http://localhost
-# API:  http://localhost/api/v1
-```
+---
 
-## Architecture
+## 🎨 Tech Stack
 
-```
-Nginx (80) → Next.js (3000) + Express API (5000 x2)
-                                    ↕
-                              MongoDB + Redis
-                                    ↕
-                              BullMQ Worker
-```
+<div align="center">
 
-## Project Structure
+| **Domain** | **Technologies** |
+| :--- | :--- |
+| 🌐 **Frontend** | [Next.js 16](https://nextjs.org/) • [React 19](https://react.dev/) • [Tailwind CSS v4](https://tailwindcss.com/) • [Framer Motion](https://www.framer.com/motion/) |
+| 🗄️ **Backend** | [Node.js](https://nodejs.org/) • [Express.js](https://expressjs.com/) • [MongoDB](https://www.mongodb.com/) • [Redis](https://redis.io/) |
+| ⚡ **Real-Time** | [Socket.io](https://socket.io/) • `@socket.io/redis-adapter` |
+| 🧠 **State & Data** | [Zustand](https://zustand-demo.pmnd.rs/) • [@tanstack/react-query](https://tanstack.com/query/latest) |
+| 🛠️ **Workers/Jobs** | [BullMQ](https://docs.bullmq.io/) |
+| 📊 **Visuals/Maps** | [Recharts](https://recharts.org/) • [React-Leaflet](https://react-leaflet.js.org/) |
 
-```
+</div>
+
+---
+
+## 📦 Project Architecture
+
+```text
 crowdqueue/
-├── client/          # Next.js 15 (App Router)
-├── server/          # Express API
-├── worker/          # BullMQ background jobs
-├── nginx/           # Reverse proxy config
-└── docker-compose.yml
+├── 🌈 client/             # Next.js Frontend Application
+│   ├── src/app/           # Next.js App Router (Pages & Layouts)
+│   ├── src/components/    # Reusable UI Components
+│   ├── src/lib/           # Utilities, Socket singleton, APIs
+│   └── src/store/         # Zustand Stores
+│
+├── ⚙️ server/              # Express.js Backend API
+│   ├── src/controllers/   # Request handlers
+│   ├── src/models/        # Mongoose Schemas
+│   ├── src/routes/        # API route definitions
+│   └── src/services/      # Business logic & integrations
+│
+└── 🔨 worker/              # (If applicable) Background Job Processors
 ```
+
+---
+
+## 🚦 Getting Started
+
+### Prerequisites
+- **Node.js** (v20+)
+- **MongoDB** instance (local or Atlas)
+- **Redis Server** (local or Upstash)
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/MayankRaj435/crowdqueue.git
+cd crowdqueue
+```
+
+### 2️⃣ Environment Setup
+Create a `.env` file in both `client` and `server` directories based on their respective configurations.
+
+**`server/.env`:**
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+REDIS_URL=your_redis_connection_string
+JWT_SECRET=your_super_secret_key
+# Add Twilio / Push Notification keys as required
+```
+
+### 3️⃣ Install Dependencies
+```bash
+# Server dependencies
+cd server
+npm install
+
+# Client dependencies
+cd ../client
+npm install --legacy-peer-deps
+```
+
+### 4️⃣ Run the Development Servers
+
+<details>
+<summary><b>Click to show commands</b></summary>
+
+**Terminal 1 (Backend):**
+```bash
+cd server
+npm run dev
+```
+
+**Terminal 2 (Frontend):**
+```bash
+cd client
+npm run dev
+```
+</details>
+
+The app will be glowing at [http://localhost:3000](http://localhost:3000) ✨
+
+---
+
+## 🛡️ Security & Performance
+
+- 🛑 **Rate Limiting**: Integrated `express-rate-limit` + `rate-limit-redis`.
+- 🗜️ **Payload Compression**: Using `compression` middleware.
+- 🔒 **Secure Headers**: Using `helmet` to protect against web vulnerabilities.
+
+---
+
+<div align="center">
+  
+  ## 🤝 Contributing
+  Contributions, issues, and feature requests are highly welcome!  
+  Check out the [issues page](https://github.com/MayankRaj435/crowdqueue/issues).
+
+  <br />
+
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer" width="100%" alt="Footer Banner"/>
+  
+  <p><b>Built with ❤️ and styled for perfection.</b></p>
+</div>
