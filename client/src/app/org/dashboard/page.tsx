@@ -1,12 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { QRCodeSVG } from "qrcode.react";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { AnimatedCounter } from "@/components/ui/animated-effects";
 import { useAuthStore } from "@/store/authStore";
+import { StaffTab } from "@/components/org/StaffTab";
+import { AnalyticsTab } from "@/components/org/AnalyticsTab";
 import fetchClient from "@/api/axiosInstance";
 
 interface QueueInfo {
@@ -36,6 +39,8 @@ export default function OrgDashboardPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [newQueue, setNewQueue] = useState({ name: "", description: "", maxCapacity: "200" });
   const [creating, setCreating] = useState(false);
+  const [qrQueue, setQrQueue] = useState<QueueInfo | null>(null);
+  const [activeTab, setActiveTab] = useState("queues");
 
   const fetchData = async () => {
     if (!user?.organizationId) return;
@@ -113,7 +118,30 @@ export default function OrgDashboardPage() {
             </div>
           </motion.div>
 
-          {/* Stats */}
+          {/* Tabs Navigation */}
+          <div className="flex gap-6 mb-8 border-b border-white/[0.04]">
+            {["queues", "staff", "analytics"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-4 text-sm font-medium capitalize transition-colors relative ${
+                  activeTab === tab ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+                }`}
+              >
+                {tab}
+                {activeTab === tab && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {activeTab === "queues" && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
             {[
               { label: "Active Queues", value: queues.filter((q) => q.status === "active").length },
@@ -226,6 +254,12 @@ export default function OrgDashboardPage() {
                         </div>
                       </div>
                       <div className="flex gap-2">
+                        <button
+                          onClick={() => setQrQueue(queue)}
+                          className="px-4 py-2 rounded-full text-xs border border-white/20 text-white hover:bg-white/10 transition-colors"
+                        >
+                          QR Code
+                        </button>
                         {queue.status === "active" && (
                           <button
                             onClick={() => handleStatusChange(queue._id, "paused")}
@@ -257,8 +291,73 @@ export default function OrgDashboardPage() {
               ))}
             </div>
           )}
+        </motion.div>
+      )}
+
+
+
+          {activeTab === "staff" && org && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <StaffTab orgId={org._id} />
+            </motion.div>
+          )}
+
+          {activeTab === "analytics" && org && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <AnalyticsTab orgId={org._id} />
+            </motion.div>
+          )}
         </div>
       </div>
+
+      {/* QR Code Modal */}
+      <AnimatePresence>
+        {qrQueue && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setQrQueue(null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white p-8 rounded-3xl max-w-sm w-full text-center relative shadow-2xl"
+            >
+              <button
+                onClick={() => setQrQueue(null)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-500 hover:bg-neutral-200 transition-colors"
+              >
+                ✕
+              </button>
+              
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-black leading-tight mb-1">{qrQueue.name}</h3>
+                <p className="text-sm text-neutral-500 font-medium">Scan to join the queue</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-2xl border-2 border-neutral-100 inline-block mb-8 shadow-sm">
+                <QRCodeSVG 
+                  value={`${typeof window !== 'undefined' ? window.location.origin : ''}/queue/${qrQueue._id}`}
+                  size={220}
+                  level={"H"}
+                  includeMargin={true}
+                />
+              </div>
+              
+              <button 
+                onClick={() => window.print()} 
+                className="w-full py-4 bg-black text-white rounded-xl font-medium shadow-lg hover:bg-neutral-800 transition-all active:scale-[0.98]"
+              >
+                Print Poster
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ProtectedRoute>
   );
 }

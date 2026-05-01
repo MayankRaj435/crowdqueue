@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore";
@@ -8,10 +8,17 @@ import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
+
+  const handleLogout = async () => {
+    await logout();
+    setMobileOpen(false);
+    router.push("/");
+  };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -70,7 +77,7 @@ export function Navbar() {
             <div className="flex items-center gap-3">
               <span className="text-sm text-neutral-400">{user?.name}</span>
               <button
-                onClick={() => logout()}
+                onClick={handleLogout}
                 className="px-4 py-2 text-sm text-neutral-400 hover:text-white rounded-full hover:bg-white/[0.05] transition-all"
               >
                 Logout
@@ -144,7 +151,7 @@ export function Navbar() {
                 </div>
               )}
               {isAuthenticated && (
-                <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-4 py-3 text-sm text-neutral-400 hover:text-white rounded-xl hover:bg-white/[0.05]">
+                <button onClick={handleLogout} className="block w-full text-left px-4 py-3 text-sm text-neutral-400 hover:text-white rounded-xl hover:bg-white/[0.05]">
                   Logout
                 </button>
               )}

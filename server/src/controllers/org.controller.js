@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const bcrypt = require('bcryptjs');
 const Organization = require('../models/Organization.model');
 const Queue = require('../models/Queue.model');
 const User = require('../models/User.model');
@@ -169,4 +170,85 @@ const updateOrg = async (req, res, next) => {
   }
 };
 
-module.exports = { registerOrg, getNearbyOrgs, getOrgById, updateOrg };
+const createStaff = async (req, res, next) => {
+  try {
+    const org = await Organization.findById(req.params.id);
+    if (!org) return sendError(res, 'ORG_NOT_FOUND', 'Organization not found', 404);
+    if (String(org.adminId) !== req.user.userId) return sendError(res, 'FORBIDDEN', 'Only admin can add staff', 403);
+
+    const { name, phone, password } = req.body;
+    
+    let user = await User.findOne({ phone });
+    if (user) {
+      return sendError(res, 'USER_EXISTS', 'User with this phone already exists', 409);
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    user = await User.create({
+      name,
+      phone,
+      passwordHash,
+      role: 'staff',
+      organizationId: org._id,
+      isPhoneVerified: true,
+      isActive: true,
+    });
+
+    sendSuccess(res, { staff: { id: user._id, name: user.name, phone: user.phone, role: user.role } }, 'Staff created successfully', 201);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getStaff = async (req, res, next) => {
+  try {
+    const org = await Organization.findById(req.params.id);
+    if (!org) return sendError(res, 'ORG_NOT_FOUND', 'Organization not found', 404);
+    if (String(org.adminId) !== req.user.userId) return sendError(res, 'FORBIDDEN', 'Only admin can view staff', 403);
+
+    const staff = await User.find({ organizationId: org._id, role: { $in: ['staff', 'org_admin'] } })
+      .select('name phone role isActive lastLoginAt createdAt')
+      .lean();
+
+    sendSuccess(res, { staff });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAnalytics = async (req, res, next) => {
+  try {
+    const org = await Organization.findById(req.params.id);
+    if (!org) return sendError(res, 'ORG_NOT_FOUND', 'Organization not found', 404);
+    if (String(org.adminId) !== req.user.userId) return sendError(res, 'FORBIDDEN', 'Only admin can view analytics', 403);
+
+    const queues = await Queue.find({ organizationId: org._id }).lean();
+    
+    const today = new Date();
+    const mockData = Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date(today);
+      d.setDate(d.getDate() - (6 - i));
+      const dateStr = d.toLocaleDateString('en-US', { weekday: 'short' });
+      
+      return {
+        date: dateStr,
+        served: Math.floor(Math.random() * 50) + (i === 6 ? queues.reduce((sum, q) => sum + (q.totalServedToday || 0), 0) : 0),
+        avgWaitTimeMinutes: Math.floor(Math.random() * 20) + 10,
+        dropOffs: Math.floor(Math.random() * 10),
+      };
+    });
+
+    sendSuccess(res, { 
+      overview: {
+        totalQueues: queues.length,
+        totalServedToday: queues.reduce((sum, q) => sum + (q.totalServedToday || 0), 0),
+        avgServiceTimeGlobal: queues.length ? queues.reduce((sum, q) => sum + (q.avgServiceTimeMs || 0), 0) / queues.length : 0,
+      },
+      chartData: mockData
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { registerOrg, getNearbyOrgs, getOrgById, updateOrg, createStaff, getStaff, getAnalytics };
