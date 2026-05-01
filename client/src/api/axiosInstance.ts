@@ -34,6 +34,8 @@ const processQueue = (error: unknown = null) => {
   refreshQueue = [];
 };
 
+const AUTH_PAGES = ["/login", "/register"];
+
 async function tryRefresh(): Promise<boolean> {
   try {
     const res = await fetch(`${API_URL}/auth/refresh`, {
@@ -101,7 +103,10 @@ export async function api<T = unknown>(
         processQueue(new Error("Session expired"));
         setAccessToken(null);
         if (typeof window !== "undefined") {
-          window.location.href = "/login";
+          const currentPath = window.location.pathname;
+          if (!AUTH_PAGES.includes(currentPath)) {
+            window.location.href = "/login";
+          }
         }
         throw new FetchError("Session expired", 401, "SESSION_EXPIRED");
       }

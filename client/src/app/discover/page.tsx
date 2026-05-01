@@ -40,7 +40,6 @@ export default function DiscoverPage() {
   useEffect(() => {
     const fetchNearby = async () => {
       try {
-        // Default to Delhi coordinates if geolocation unavailable
         let lng = 77.209;
         let lat = 28.6139;
 
@@ -52,11 +51,12 @@ export default function DiscoverPage() {
             lng = pos.coords.longitude;
             lat = pos.coords.latitude;
           } catch {
-            // Use defaults
+            // Use Delhi defaults
           }
         }
 
-        const res = await queueApi.getNearby(lng, lat, 10000, filter !== "all" ? filter : undefined);
+        // 50km radius — practical for city-wide discovery
+        const res = await queueApi.getNearby(lng, lat, 50000, filter !== "all" ? filter : undefined);
         setOrgs((res.data as { organizations: OrgInfo[] }).organizations || []);
       } catch {
         setOrgs([]);

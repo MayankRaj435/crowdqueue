@@ -59,7 +59,6 @@ const userSchema = new Schema({
   refreshTokenHash: String,
 }, { timestamps: true });
 
-userSchema.index({ phone: 1 });
 userSchema.index({ role: 1, isActive: 1 });
 
 module.exports = mongoose.model('User', userSchema);

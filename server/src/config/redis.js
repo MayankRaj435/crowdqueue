@@ -1,8 +1,12 @@
 const Redis = require('ioredis');
 const logger = require('../utils/logger');
 
-const redisClient = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const isTLS = redisUrl.startsWith('rediss://');
+
+const redisClient = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
+  tls: isTLS ? { rejectUnauthorized: false } : undefined,
   retryStrategy: (times) => {
     if (times > 20) {
       logger.error('Redis: max retries reached');

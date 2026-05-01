@@ -116,7 +116,7 @@ const userTypes = [
 
 export default function LandingPage() {
   return (
-    <div className="relative bg-black">
+    <div className="relative bg-black -mt-20">
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <BackgroundBeams />

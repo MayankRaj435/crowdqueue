@@ -1,4 +1,6 @@
-import fetchClient from "./axiosInstance";
+import fetchClient, { setAccessToken } from "./axiosInstance";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export const authApi = {
   register: (data: { name: string; phone: string; email?: string; password: string }) =>
@@ -9,9 +11,21 @@ export const authApi = {
 
   logout: () => fetchClient.post("/auth/logout"),
 
-  refresh: () => fetchClient.post("/auth/refresh"),
+  // Uses raw fetch to bypass the fetchClient 401 interceptor — prevents infinite refresh loop
+  refresh: async () => {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) throw new Error("Refresh failed");
+    const json = await res.json();
+    setAccessToken(json.data?.accessToken ?? null);
+    return json;
+  },
 
   getMe: () => fetchClient.get("/auth/me"),
 
   verifyPhone: (code: string) => fetchClient.post("/auth/verify-phone", { code }),
 };
+
