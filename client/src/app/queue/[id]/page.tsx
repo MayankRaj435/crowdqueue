@@ -10,6 +10,7 @@ import { formatWaitTime, getStatusColor } from "@/lib/utils";
 import { getSocket } from "@/lib/socket";
 import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
+import { getAccessToken } from "@/api/axiosInstance";
 
 interface QueueState {
   _id: string;
@@ -45,7 +46,8 @@ const orgTypeEmoji: Record<string, string> = {
 export default function QueueDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { accessToken } = useAuthStore();
+  const { user } = useAuthStore();
+  const accessToken = getAccessToken();
 
   const [queue, setQueue] = useState<QueueState | null>(null);
   const [myToken, setMyToken] = useState<MyToken | null>(null);

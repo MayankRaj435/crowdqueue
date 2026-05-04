@@ -1,13 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuthStore();
   const [form, setForm] = useState({ phone: "", password: "" });
   const [error, setError] = useState("");
@@ -19,7 +20,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(form.phone, form.password);
-      router.push("/discover");
+      const callbackUrl = searchParams.get("callbackUrl");
+      router.push(callbackUrl || "/discover");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Login failed";
       setError(msg);
@@ -91,11 +93,23 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-neutral-500">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-white hover:underline">
+          <Link href={searchParams.get("callbackUrl") ? `/register?callbackUrl=${encodeURIComponent(searchParams.get("callbackUrl")!)}` : "/register"} className="text-white hover:underline">
             Sign up
           </Link>
         </p>
       </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

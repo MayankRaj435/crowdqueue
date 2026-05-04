@@ -1,13 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { register } = useAuthStore();
   const [form, setForm] = useState({ name: "", phone: "", email: "", password: "" });
   const [error, setError] = useState("");
@@ -19,7 +20,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form.name, form.phone, form.password, form.email || undefined);
-      router.push("/discover");
+      const callbackUrl = searchParams.get("callbackUrl");
+      router.push(callbackUrl || "/discover");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Registration failed";
       setError(msg);
@@ -93,11 +95,23 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-neutral-500">
           Already have an account?{" "}
-          <Link href="/login" className="text-white hover:underline">
+          <Link href={searchParams.get("callbackUrl") ? `/login?callbackUrl=${encodeURIComponent(searchParams.get("callbackUrl")!)}` : "/login"} className="text-white hover:underline">
             Log in
           </Link>
         </p>
       </motion.div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
   );
 }

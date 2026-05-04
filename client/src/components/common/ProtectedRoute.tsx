@@ -1,6 +1,6 @@
 "use client";
 import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 export function ProtectedRoute({
@@ -12,15 +12,16 @@ export function ProtectedRoute({
 }) {
   const { isAuthenticated, isLoading, user } = useAuthStore();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push("/login");
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
     }
     if (!isLoading && isAuthenticated && roles && user && !roles.includes(user.role)) {
       router.push("/");
     }
-  }, [isAuthenticated, isLoading, user, roles, router]);
+  }, [isAuthenticated, isLoading, user, roles, router, pathname]);
 
   if (isLoading) {
     return (

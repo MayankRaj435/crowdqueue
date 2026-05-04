@@ -10,6 +10,10 @@ import { Meteors, AnimatedCounter } from "@/components/ui/animated-effects";
 import { MovingBorder } from "@/components/ui/moving-border";
 import { ExpandableCard } from "@/components/ui/expandable-card";
 import { AsciiArt } from "@/components/ui/ascii-art";
+import TextRevealCardPreview from "@/components/text-reveal-card-demo";
+import TextFlippingBoardDemo from "@/components/text-flipping-board-demo";
+import GlareCardDemo from "@/components/glare-card-demo";
+import { GlareCard } from "@/components/ui/glare-card";
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -199,6 +203,28 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* The CrowdQueue Difference (Text Reveal Card) */}
+      <section className="py-24 border-t border-white/[0.04] overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
+              The Old Way vs. The New Way
+            </h2>
+            <p className="text-neutral-400 max-w-xl mx-auto">
+              We replace physical frustration with digital freedom.
+            </p>
+          </motion.div>
+          <div className="w-full flex justify-center">
+            <TextRevealCardPreview />
+          </div>
+        </div>
+      </section>
+
       {/* Features Bento Grid */}
       <section className="py-24 border-t border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-6">
@@ -334,6 +360,33 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Digital Signage (Text Flipping Board) */}
+      <section className="py-24 border-t border-white/[0.04] bg-neutral-950/50">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+          <div className="flex-1 w-full max-w-lg">
+            <TextFlippingBoardDemo />
+          </div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex-1"
+          >
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-6">
+              Turn any screen into a Live Queue Display.
+            </h2>
+            <p className="text-neutral-400 mb-6 leading-relaxed">
+              No proprietary hardware needed. CrowdQueue's responsive waiting room view works on iPads, Smart TVs, or standard monitors, giving your lobby an instant, premium upgrade.
+            </p>
+            <Link href="/register">
+              <OutlineButton className="text-sm px-6 py-3">
+                See Live Demo
+              </OutlineButton>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Developer API (Ascii Art Demo) */}
       <section className="py-24 border-t border-white/[0.04] overflow-hidden bg-black relative">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12 relative z-10">
@@ -374,6 +427,63 @@ export default function LandingPage() {
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing (Glare Card) */}
+      <section className="py-24 border-t border-white/[0.04]">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-neutral-400 max-w-xl mx-auto">
+              Free for citizens, affordable for organizations.
+            </p>
+          </motion.div>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-16">
+            {/* Free Tier (Glare Card) */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-[50px] blur opacity-10 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
+              <GlareCard className="flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-neutral-900 to-black">
+                <div className="w-14 h-14 bg-neutral-800 border border-white/5 rounded-full flex items-center justify-center mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-400"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <h3 className="text-white font-display font-bold text-3xl tracking-wide mb-1">Starter</h3>
+                <p className="text-neutral-400 font-semibold mb-4 border-b border-white/10 pb-4 w-full">Free forever</p>
+                
+                <ul className="text-neutral-300 text-sm space-y-3 text-left w-full px-2">
+                  <li className="flex items-center gap-2">
+                    <span className="text-neutral-500">✓</span> 1 active queue
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-neutral-500">✓</span> Up to 50 tokens/day
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-neutral-500">✓</span> Basic queue management
+                  </li>
+                </ul>
+                
+                <div className="mt-auto pt-4 w-full z-20">
+                  <Link href="/register" className="block w-full py-3 rounded-xl border border-white/10 text-neutral-300 hover:bg-white/5 transition-colors text-sm font-medium z-20 relative pointer-events-auto">
+                    Start Free
+                  </Link>
+                </div>
+              </GlareCard>
+            </div>
+
+            {/* Pro Tier (Glare Card) */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-emerald-300 rounded-[50px] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+              <GlareCardDemo />
             </div>
           </div>
         </div>
