@@ -18,7 +18,14 @@ const registerSchema = Joi.object({
 const loginSchema = Joi.object({
   phone: Joi.string().pattern(/^[6-9]\d{9}$/).required(),
   password: Joi.string().required(),
+  portalRole: Joi.string().valid('customer', 'staff', 'admin').optional(),
 });
+
+const portalRoleMap = {
+  customer: ['citizen'],
+  staff: ['staff'],
+  admin: ['org_admin', 'super_admin'],
+};
 
 const generateTokens = (userId, role) => {
   const accessToken = jwt.sign(
@@ -94,10 +101,20 @@ const login = async (req, res, next) => {
     }
 
     const { phone, password } = value;
+    const expectedRoles = value.portalRole ? portalRoleMap[value.portalRole] : null;
 
     const user = await User.findOne({ phone, isActive: true });
     if (!user) {
       return sendError(res, 'INVALID_CREDENTIALS', 'Invalid phone number or password', 401);
+    }
+
+    if (expectedRoles && !expectedRoles.includes(user.role)) {
+      return sendError(
+        res,
+        'ROLE_MISMATCH',
+        'This account does not match the selected login portal',
+        403
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
