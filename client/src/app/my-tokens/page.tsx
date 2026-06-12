@@ -4,7 +4,12 @@ import { motion } from "framer-motion";
 import { tokenApi } from "@/api/tokenApi";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { MovingBorder } from "@/components/ui/moving-border";
+import { PageShell } from "@/components/ui/page-shell";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { formatWaitTime, getStatusColor } from "@/lib/utils";
+import Link from "next/link";
 
 interface Token {
   _id: string;
@@ -52,13 +57,9 @@ export default function MyTokensPage() {
   const tokens = tab === "active" ? active : past;
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-black">
-        <div className="max-w-3xl mx-auto px-6 py-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="font-display text-3xl font-bold text-white mb-2">My Tokens</h1>
-            <p className="text-neutral-400 mb-8">Track all your queue tokens</p>
-          </motion.div>
+    <ProtectedRoute loginRole="customer">
+      <PageShell maxWidth="max-w-3xl">
+          <PageHeader title="My Tokens" description="Track all your queue tokens" />
 
           {/* Tabs */}
           <div className="flex gap-2 mb-8">
@@ -79,15 +80,26 @@ export default function MyTokensPage() {
 
           {/* Token List */}
           {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            </div>
+            <LoadingSpinner />
           ) : tokens.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
-              <p className="text-neutral-500 text-lg">
-                {tab === "active" ? "No active tokens" : "No past tokens"}
-              </p>
-            </motion.div>
+            <EmptyState
+              title={tab === "active" ? "No active tokens" : "No past tokens"}
+              description={
+                tab === "active"
+                  ? "Join a queue from Discover to get started."
+                  : "Completed tokens will appear here."
+              }
+              action={
+                tab === "active" ? (
+                  <Link
+                    href="/discover"
+                    className="inline-block text-sm text-white border border-white/10 px-5 py-2 rounded-full hover:bg-white/5 transition-colors"
+                  >
+                    Discover queues
+                  </Link>
+                ) : undefined
+              }
+            />
           ) : (
             <div className="space-y-4">
               {tokens.map((token, i) => {
@@ -146,8 +158,7 @@ export default function MyTokensPage() {
               })}
             </div>
           )}
-        </div>
-      </div>
+      </PageShell>
     </ProtectedRoute>
   );
 }

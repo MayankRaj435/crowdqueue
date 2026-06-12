@@ -1,6 +1,11 @@
 "use client";
-import React, { useEffect, useRef, useState, memo } from "react";
-import { motion } from "framer-motion";
+import React, { useCallback, useRef, useState, memo } from "react";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { cn } from "@/lib/utils";
 
@@ -15,102 +20,94 @@ export const TextRevealCard = ({
   children?: React.ReactNode;
   className?: string;
 }) => {
-  const [widthPercentage, setWidthPercentage] = useState(0);
-  const cardRef = useRef<HTMLDivElement | any>(null);
-  const [left, setLeft] = useState(0);
-  const [localWidth, setLocalWidth] = useState(0);
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const [isMouseOver, setIsMouseOver] = useState(false);
+  const rawX = useMotionValue(0);
+  const clipRight = useTransform(rawX, (v) => 100 - v);
+  const clipPath = useMotionTemplate`inset(0 ${clipRight}% 0 0)`;
+  const lineX = useTransform(rawX, (v) => `${v}%`);
+  const rotate = useTransform(rawX, [0, 100], [-5, 5]);
 
-  useEffect(() => {
-    if (cardRef.current) {
-      const { left, width: localWidth } =
-        cardRef.current.getBoundingClientRect();
-      setLeft(left);
-      setLocalWidth(localWidth);
-    }
-  }, []);
+  const updateWidthFromClientX = useCallback((clientX: number) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    if (!rect.width) return;
+    const relativeX = clientX - rect.left;
+    const next = (relativeX / rect.width) * 100;
+    const clamped = Math.min(100, Math.max(0, next));
+    rawX.set(clamped);
+  }, [rawX]);
 
-  function mouseMoveHandler(event: any) {
-    event.preventDefault();
-
-    const { clientX } = event;
-    if (cardRef.current) {
-      const relativeX = clientX - left;
-      setWidthPercentage((relativeX / localWidth) * 100);
-    }
+  function pointerMoveHandler(event: React.PointerEvent<HTMLDivElement>) {
+    updateWidthFromClientX(event.clientX);
   }
 
-  function mouseLeaveHandler() {
+  function pointerLeaveHandler() {
     setIsMouseOver(false);
   }
-  function mouseEnterHandler() {
-    setIsMouseOver(true);
-  }
-  function touchMoveHandler(event: React.TouchEvent<HTMLDivElement>) {
-    event.preventDefault();
-    const clientX = event.touches[0]!.clientX;
-    if (cardRef.current) {
-      const relativeX = clientX - left;
-      setWidthPercentage((relativeX / localWidth) * 100);
+
+  function pointerUpHandler(event: React.PointerEvent<HTMLDivElement>) {
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.pointerType !== "mouse") {
+      pointerLeaveHandler();
     }
   }
 
-  const rotateDeg = (widthPercentage - 50) * 0.1;
+  function pointerDownHandler(event: React.PointerEvent<HTMLDivElement>) {
+    setIsMouseOver(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    updateWidthFromClientX(event.clientX);
+  }
+
+  function pointerEnterHandler(event: React.PointerEvent<HTMLDivElement>) {
+    setIsMouseOver(true);
+    updateWidthFromClientX(event.clientX);
+  }
   return (
     <div
-      onMouseEnter={mouseEnterHandler}
-      onMouseLeave={mouseLeaveHandler}
-      onMouseMove={mouseMoveHandler}
-      onTouchStart={mouseEnterHandler}
-      onTouchEnd={mouseLeaveHandler}
-      onTouchMove={touchMoveHandler}
+      onPointerEnter={pointerEnterHandler}
+      onPointerLeave={pointerLeaveHandler}
+      onPointerMove={pointerMoveHandler}
+      onPointerDown={pointerDownHandler}
+      onPointerUp={pointerUpHandler}
+      onPointerCancel={pointerLeaveHandler}
       ref={cardRef}
       className={cn(
-        "bg-neutral-900/40 border border-white/[0.04] w-full max-w-[40rem] rounded-2xl p-8 relative overflow-hidden",
+        "bg-neutral-900/40 border border-white/[0.04] w-full max-w-[40rem] rounded-2xl p-8 relative overflow-hidden touch-pan-y",
         className
       )}
     >
       {children}
 
-      <div className="h-40  relative flex items-center overflow-hidden">
+      <div className="relative flex items-center min-h-[12rem] sm:min-h-[14rem] overflow-hidden">
         <motion.div
           style={{
             width: "100%",
+            clipPath,
+            opacity: isMouseOver ? 1 : 0,
           }}
-          animate={
-            isMouseOver
-              ? {
-                  opacity: widthPercentage > 0 ? 1 : 0,
-                  clipPath: `inset(0 ${100 - widthPercentage}% 0 0)`,
-                }
-              : {
-                  clipPath: `inset(0 ${100 - widthPercentage}% 0 0)`,
-                }
-          }
-          transition={isMouseOver ? { type: "spring", stiffness: 300, damping: 30 } : { duration: 0.5, ease: "easeOut" }}
-          className="absolute bg-neutral-950 z-20 will-change-transform"
+          className="absolute inset-0 bg-neutral-950 z-20 will-change-transform transition-opacity duration-200"
         >
           <p
             style={{
               textShadow: "4px 4px 15px rgba(0,0,0,0.5)",
             }}
-            className="text-base sm:text-[3rem] py-10 font-bold text-white bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-300"
+            className="text-base sm:text-[3rem] leading-tight py-6 sm:py-8 font-bold text-white bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-300"
           >
             {revealText}
           </p>
         </motion.div>
         <motion.div
-          animate={{
-            left: `${widthPercentage}%`,
-            rotate: `${rotateDeg}deg`,
-            opacity: widthPercentage > 0 ? 1 : 0,
+          style={{
+            left: lineX,
+            rotate,
+            opacity: isMouseOver ? 1 : 0,
           }}
-          transition={isMouseOver ? { type: "spring", stiffness: 300, damping: 30 } : { duration: 0.5, ease: "easeOut" }}
-          className="h-40 w-[4px] bg-gradient-to-b from-transparent via-emerald-500/80 to-transparent absolute z-50 will-change-transform"
+          className="h-full w-[4px] bg-gradient-to-b from-transparent via-emerald-500/80 to-transparent absolute z-50 will-change-transform transition-opacity duration-200"
         ></motion.div>
 
-        <div className=" overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,white,transparent)]">
-          <p className="text-base sm:text-[3rem] leading-tight py-10 font-bold bg-clip-text text-transparent bg-neutral-800">
+        <div className="relative overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,white,transparent)]">
+          <p className="text-base sm:text-[3rem] leading-tight py-6 sm:py-8 font-bold bg-clip-text text-transparent bg-neutral-800">
             {text}
           </p>
           <MemoizedStars />

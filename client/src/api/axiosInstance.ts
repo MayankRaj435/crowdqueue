@@ -34,7 +34,7 @@ const processQueue = (error: unknown = null) => {
   refreshQueue = [];
 };
 
-const AUTH_PAGES = ["/login", "/register"];
+const AUTH_PAGES = ["/login", "/login/customer", "/login/staff", "/login/admin", "/register", "/org/register"];
 
 async function tryRefresh(): Promise<boolean> {
   try {

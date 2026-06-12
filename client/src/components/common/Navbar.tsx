@@ -24,12 +24,21 @@ export function Navbar() {
     setIsScrolled(latest > 50);
   });
 
+  if (pathname?.startsWith("/display")) {
+    return null;
+  }
+
   const navLinks = isAuthenticated
     ? [
         { href: "/discover", label: "Discover" },
         { href: "/my-tokens", label: "My Tokens" },
         ...(user?.role === "org_admin"
           ? [{ href: "/org/dashboard", label: "Dashboard" }]
+          : []),
+        ...(user?.role === "staff" ||
+        user?.role === "super_admin" ||
+        user?.role === "org_admin"
+          ? [{ href: "/staff", label: "Staff Console" }]
           : []),
       ]
     : [];

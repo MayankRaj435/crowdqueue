@@ -7,10 +7,12 @@ import { queueApi } from "@/api/queueApi";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { formatWaitTime, getStatusColor } from "@/lib/utils";
-import { getSocket } from "@/lib/socket";
-import { useAuthStore } from "@/store/authStore";
+import { connectSocket, getSocket } from "@/lib/socket";
 import Link from "next/link";
 import { getAccessToken } from "@/api/axiosInstance";
+import { PageShell } from "@/components/ui/page-shell";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface QueueState {
   _id: string;
@@ -46,7 +48,6 @@ const orgTypeEmoji: Record<string, string> = {
 export default function QueueDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { user } = useAuthStore();
   const accessToken = getAccessToken();
 
   const [queue, setQueue] = useState<QueueState | null>(null);
@@ -84,8 +85,7 @@ export default function QueueDetailPage() {
   // Real-time Socket.io
   useEffect(() => {
     if (!id) return;
-    const socket = getSocket(accessToken || undefined);
-    if (!socket.connected) socket.connect();
+    const socket = connectSocket(accessToken || undefined);
 
     socket.emit("join_queue_room", { queueId: id });
 
@@ -159,33 +159,45 @@ export default function QueueDetailPage() {
     : 0;
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-black">
-        <div className="max-w-2xl mx-auto px-6 py-12">
-          {/* Back */}
+    <ProtectedRoute loginRole="customer">
+      <PageShell maxWidth="max-w-2xl">
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-            <Link
-              href="/discover"
-              className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-white transition-colors mb-8"
-            >
-              ← Back to Discover
-            </Link>
+            <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+              <Link
+                href="/discover"
+                className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-white transition-colors"
+              >
+                ← Back to Discover
+              </Link>
+              {queue && (
+                <Link
+                  href={`/display/${id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-neutral-500 hover:text-emerald-400 border border-white/[0.08] px-3 py-1.5 rounded-full transition-colors"
+                >
+                  Open lobby display ↗
+                </Link>
+              )}
+            </div>
           </motion.div>
 
           {loading ? (
-            <div className="flex justify-center py-32">
-              <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            </div>
+            <LoadingSpinner className="py-32" />
           ) : !queue ? (
-            <div className="text-center py-32">
-              <p className="text-neutral-400 text-lg">Queue not found</p>
-              <button
-                onClick={() => router.push("/discover")}
-                className="mt-4 text-sm text-neutral-500 hover:text-white"
-              >
-                Go back to Discover
-              </button>
-            </div>
+            <EmptyState
+              title="Queue not found"
+              description="This queue may have been removed or closed."
+              action={
+                <button
+                  type="button"
+                  onClick={() => router.push("/discover")}
+                  className="text-sm text-neutral-400 hover:text-white border border-white/10 px-4 py-2 rounded-full"
+                >
+                  Back to Discover
+                </button>
+              }
+            />
           ) : (
             <>
               {/* Header */}
@@ -437,8 +449,7 @@ export default function QueueDetailPage() {
               </motion.div>
             </>
           )}
-        </div>
-      </div>
+      </PageShell>
     </ProtectedRoute>
   );
 }

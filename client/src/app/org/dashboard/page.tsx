@@ -90,7 +90,7 @@ export default function OrgDashboardPage() {
 
   if (!user?.organizationId) {
     return (
-      <ProtectedRoute roles={["org_admin"]}>
+      <ProtectedRoute roles={["org_admin"]} loginRole="admin">
         <div className="min-h-screen bg-black flex items-center justify-center px-6">
           <div className="text-center">
             <p className="text-neutral-400 mb-4">You haven&apos;t registered an organization yet.</p>
@@ -104,7 +104,7 @@ export default function OrgDashboardPage() {
   }
 
   return (
-    <ProtectedRoute roles={["org_admin"]}>
+    <ProtectedRoute roles={["org_admin"]} loginRole="admin">
       <div className="min-h-screen bg-black">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Header */}
@@ -254,6 +254,14 @@ export default function OrgDashboardPage() {
                         </div>
                       </div>
                       <div className="flex gap-2">
+                        <a
+                          href={`/display/${queue._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 rounded-full text-xs border border-emerald-400/20 text-emerald-400 hover:bg-emerald-400/10 transition-colors"
+                        >
+                          Display
+                        </a>
                         <button
                           onClick={() => setQrQueue(queue)}
                           className="px-4 py-2 rounded-full text-xs border border-white/20 text-white hover:bg-white/10 transition-colors"
@@ -348,7 +356,16 @@ export default function OrgDashboardPage() {
                 />
               </div>
               
+              <a
+                href={`/display/${qrQueue._id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full py-3 mb-3 border border-neutral-200 text-black rounded-xl font-medium hover:bg-neutral-50 transition-colors"
+              >
+                Open lobby display
+              </a>
               <button 
+                type="button"
                 onClick={() => window.print()} 
                 className="w-full py-4 bg-black text-white rounded-xl font-medium shadow-lg hover:bg-neutral-800 transition-all active:scale-[0.98]"
               >

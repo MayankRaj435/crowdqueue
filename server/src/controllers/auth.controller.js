@@ -27,6 +27,20 @@ const portalRoleMap = {
   admin: ['org_admin', 'super_admin'],
 };
 
+const isProduction = process.env.NODE_ENV === 'production';
+const refreshCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
+const clearRefreshCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
+};
+
 const generateTokens = (userId, role) => {
   const accessToken = jwt.sign(
     { userId, role },
@@ -72,12 +86,7 @@ const register = async (req, res, next) => {
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
     await User.findByIdAndUpdate(user._id, { refreshTokenHash });
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', refreshToken, refreshCookieOptions);
 
     sendSuccess(res, {
       user: {
@@ -130,12 +139,7 @@ const login = async (req, res, next) => {
       lastLoginAt: new Date(),
     });
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', refreshToken, refreshCookieOptions);
 
     sendSuccess(res, {
       user: {
@@ -155,7 +159,7 @@ const login = async (req, res, next) => {
 const logout = async (req, res, next) => {
   try {
     await User.findByIdAndUpdate(req.user.userId, { refreshTokenHash: null });
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', clearRefreshCookieOptions);
     sendSuccess(res, null, 'Logged out successfully');
   } catch (err) {
     next(err);
@@ -173,20 +177,20 @@ const refreshTokenHandler = async (req, res, next) => {
     try {
       decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     } catch {
-      res.clearCookie('refreshToken');
+      res.clearCookie('refreshToken', clearRefreshCookieOptions);
       return sendError(res, 'INVALID_REFRESH_TOKEN', 'Invalid or expired refresh token', 401);
     }
 
     const user = await User.findById(decoded.userId);
     if (!user || !user.refreshTokenHash || !user.isActive) {
-      res.clearCookie('refreshToken');
+      res.clearCookie('refreshToken', clearRefreshCookieOptions);
       return sendError(res, 'INVALID_REFRESH_TOKEN', 'Invalid refresh token', 401);
     }
 
     const isValid = await bcrypt.compare(refreshToken, user.refreshTokenHash);
     if (!isValid) {
       await User.findByIdAndUpdate(user._id, { refreshTokenHash: null });
-      res.clearCookie('refreshToken');
+      res.clearCookie('refreshToken', clearRefreshCookieOptions);
       return sendError(res, 'TOKEN_REUSE', 'Refresh token has been revoked', 401);
     }
 
@@ -194,12 +198,7 @@ const refreshTokenHandler = async (req, res, next) => {
     const newHash = await bcrypt.hash(tokens.refreshToken, 10);
     await User.findByIdAndUpdate(user._id, { refreshTokenHash: newHash });
 
-    res.cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', tokens.refreshToken, refreshCookieOptions);
 
     sendSuccess(res, {
       accessToken: tokens.accessToken,

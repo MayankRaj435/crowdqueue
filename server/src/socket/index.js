@@ -5,9 +5,20 @@ const { registerQueueHandlers } = require('./queueSocket');
 const logger = require('../utils/logger');
 
 const initSocket = (httpServer, redisClient) => {
+  const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   const io = new Server(httpServer, {
     cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:3000',
+      origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+
+        return callback(null, false);
+      },
       credentials: true,
     },
     pingTimeout: 60000,

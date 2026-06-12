@@ -128,15 +128,23 @@ cd crowdqueue
 ```
 
 ### 2️⃣ Environment Setup
-Create a `.env` file in both `client` and `server` directories based on their respective configurations.
+Create a `.env` file in the project root for local development and set production variables in your hosting dashboard.
 
 **`server/.env`:**
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_connection_string
+CLIENT_URL=http://localhost:3000
+MONGO_URI=your_mongodb_connection_string
 REDIS_URL=your_redis_connection_string
 JWT_SECRET=your_super_secret_key
+JWT_REFRESH_SECRET=your_refresh_secret_key
 # Add Twilio / Push Notification keys as required
+```
+
+**`client/.env.local`:**
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
 ```
 
 ### 3️⃣ Install Dependencies
@@ -169,6 +177,58 @@ npm run dev
 </details>
 
 The app will be glowing at [http://localhost:3000](http://localhost:3000) ✨
+
+---
+
+## 🚀 Production Deployment
+
+The cleanest deployment path is:
+
+1. Deploy the frontend to Vercel.
+2. Deploy the backend API to Render or Railway.
+3. Use MongoDB Atlas for the database.
+4. Use Upstash Redis for Redis.
+
+### Recommended env values
+
+**Client on Vercel**
+```env
+NEXT_PUBLIC_API_URL=https://your-api-domain.com/api/v1
+NEXT_PUBLIC_SOCKET_URL=https://your-api-domain.com
+```
+
+**Server on Render / Railway**
+```env
+NODE_ENV=production
+PORT=5000
+CLIENT_URL=https://your-vercel-app.vercel.app
+MONGO_URI=mongodb+srv://...
+REDIS_URL=rediss://...
+JWT_SECRET=...
+JWT_REFRESH_SECRET=...
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+VAPID_PUBLIC_KEY=...
+VAPID_PRIVATE_KEY=...
+VAPID_EMAIL=mailto:admin@yourdomain.com
+TWILIO_SID=...
+TWILIO_TOKEN=...
+TWILIO_PHONE=...
+```
+
+### Deployment steps
+
+1. Create MongoDB Atlas and Upstash Redis accounts and copy the connection strings.
+2. Deploy the server first so you have the API URL.
+3. Add the server env vars in the host dashboard and redeploy.
+4. Deploy the client to Vercel and set the client env vars to the live API URL.
+5. Update `CLIENT_URL` on the server to the Vercel domain.
+6. Test login, refresh, queue join, and socket updates in production.
+
+### Notes
+
+- `CLIENT_URL` can contain multiple comma-separated origins if you need local dev plus production, for example `http://localhost:3000,https://your-vercel-app.vercel.app`.
+- The server uses httpOnly refresh cookies, so cross-site production deployments require `sameSite=None` and `secure=true`, which is now handled automatically.
 
 ---
 

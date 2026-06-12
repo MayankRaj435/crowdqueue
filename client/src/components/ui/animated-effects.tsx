@@ -57,19 +57,28 @@ export function AnimatedCounter({
 
 export function Meteors({ number = 15 }: { number?: number }) {
   const meteors = new Array(number).fill(true);
+  const getMeteorStyle = (idx: number) => {
+    const seed = idx + 1;
+    const left = ((seed * 37) % 100) + ((seed * 19) % 100) / 100;
+    const delay = ((seed * 17) % 100) / 100;
+    const duration = 2 + ((seed * 29) % 300) / 100;
+
+    return {
+      top: 0,
+      left: `${left}%`,
+      animationDelay: `${delay}s`,
+      animationDuration: `${duration}s`,
+      animation: `meteor ${duration}s linear ${delay}s infinite`,
+    };
+  };
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {meteors.map((_, idx) => (
         <span
           key={idx}
           className="absolute h-0.5 w-0.5 rounded-full bg-white shadow-[0_0_0_1px_#ffffff10] rotate-[215deg]"
-          style={{
-            top: 0,
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 1}s`,
-            animationDuration: `${Math.random() * 3 + 2}s`,
-            animation: `meteor ${Math.random() * 3 + 2}s linear ${Math.random() * 1}s infinite`,
-          }}
+          style={getMeteorStyle(idx)}
         >
           <style jsx>{`
             @keyframes meteor {

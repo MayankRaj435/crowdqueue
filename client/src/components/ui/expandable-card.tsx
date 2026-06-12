@@ -18,13 +18,17 @@ export function ExpandableCard() {
       }
     }
 
+    window.addEventListener("keydown", onKeyDown);
+
     if (active && typeof active === "object") {
+      const prevOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+      return () => {
+        window.removeEventListener("keydown", onKeyDown);
+        document.body.style.overflow = prevOverflow;
+      };
     }
 
-    window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [active]);
 

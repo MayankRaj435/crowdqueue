@@ -5,7 +5,11 @@ import { fetchClient } from "@/api/axiosInstance";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { formatWaitTime } from "@/lib/utils";
-import { getSocket } from "@/api/socketClient";
+import { connectSocket } from "@/lib/socket";
+import { PageShell } from "@/components/ui/page-shell";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface QueueItem {
   _id: string;
@@ -49,19 +53,24 @@ export default function StaffDashboardPage() {
 
   useEffect(() => {
     if (queues.length === 0) return;
-    const socket = getSocket();
+    const socket = connectSocket();
+
+    const onStateUpdate = (state: QueueItem & { _id: string }) => {
+      setQueues((prev) =>
+        prev.map((pq) => (String(pq._id) === String(state._id) ? { ...pq, ...state } : pq))
+      );
+    };
+
+    socket.on("queue:state_update", onStateUpdate);
     queues.forEach((q) => {
       socket.emit("join_staff_room", { queueId: q._id });
-      socket.on("queue:state_update", (state: QueueItem) => {
-        if (String(state._id) === String(q._id)) {
-          setQueues((prev) => prev.map((pq) => pq._id === state._id ? { ...pq, ...state } : pq));
-        }
-      });
+      socket.emit("join_queue_room", { queueId: q._id });
     });
+
     return () => {
-      socket.off("queue:state_update");
+      socket.off("queue:state_update", onStateUpdate);
     };
-  }, [queues.length]);
+  }, [queues.map((q) => q._id).join(",")]);
 
   const handleCallNext = async (queueId: string) => {
     setCalling((prev) => ({ ...prev, [queueId]: true }));
@@ -91,23 +100,20 @@ export default function StaffDashboardPage() {
   };
 
   return (
-    <ProtectedRoute roles={["org_admin", "staff", "super_admin"]}>
-      <div className="min-h-screen bg-black">
-        <div className="max-w-5xl mx-auto px-6 py-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="font-display text-3xl font-bold text-white mb-2">Staff Dashboard</h1>
-            <p className="text-neutral-400 mb-10">Manage your queues and call tokens in real-time</p>
-          </motion.div>
+    <ProtectedRoute roles={["org_admin", "staff", "super_admin"]} loginRole="staff">
+      <PageShell maxWidth="max-w-5xl">
+          <PageHeader
+            title="Staff Console"
+            description="Call tokens and manage queues in real time"
+          />
 
           {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            </div>
+            <LoadingSpinner />
           ) : queues.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-neutral-500 text-lg">No queues found for your organization</p>
-              <p className="text-neutral-600 text-sm mt-2">Contact your super admin to set up queues</p>
-            </div>
+            <EmptyState
+              title="No queues assigned"
+              description="Contact your organization admin to create or assign queues."
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {queues.map((queue, i) => (
@@ -175,7 +181,7 @@ export default function StaffDashboardPage() {
                   <ShimmerButton
                     onClick={() => handleCallNext(queue._id)}
                     disabled={calling[queue._id] || queue.status !== "active" || queue.waiting === 0}
-                    className="w-full"
+                    className="w-full py-4 text-base"
                   >
                     {calling[queue._id] ? (
                       <span className="flex items-center gap-2">
@@ -197,8 +203,7 @@ export default function StaffDashboardPage() {
               ))}
             </div>
           )}
-        </div>
-      </div>
+      </PageShell>
     </ProtectedRoute>
   );
 }

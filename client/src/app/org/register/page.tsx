@@ -80,7 +80,7 @@ export default function OrgRegisterPage() {
   };
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute loginRole="admin">
       <div className="min-h-screen bg-black">
         <div className="max-w-2xl mx-auto px-6 py-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -249,6 +249,7 @@ export default function OrgRegisterPage() {
                     type="text"
                     value={form.longitude}
                     onChange={(e) => update("longitude", e.target.value)}
+                    placeholder="77.209"
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-white/20 transition-colors"
                   />
                 </div>
@@ -258,6 +259,7 @@ export default function OrgRegisterPage() {
                     type="text"
                     value={form.latitude}
                     onChange={(e) => update("latitude", e.target.value)}
+                    placeholder="28.6139"
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-white/20 transition-colors"
                   />
                 </div>

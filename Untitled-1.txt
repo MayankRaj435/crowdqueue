@@ -1,0 +1,754 @@
+[ceternity UI](https://ui.aceternity.com/)
+ceternity UI
+[Components](https://ui.aceternity.com/components)
+[Blocks](https://ui.aceternity.com/blocks)
+[Templates](https://ui.aceternity.com/templates)
+[Pricing](https://ui.aceternity.com/pricing)
+[Changelog](https://ui.aceternity.com/changelog)
+[Get All-Access](https://ui.aceternity.com/pricing)
+[Twitter @mannupaaji](https://twitter.com/mannupaaji)
+[Learn Tailwind and Motion](https://youtube.com/@manuarora)
+[Install Next.js](https://ui.aceternity.com/docs/install-nextjs)
+[Install Tailwind CSS](https://ui.aceternity.com/docs/install-tailwindcss)
+[Add utilities](https://ui.aceternity.com/docs/add-utilities)
+[CLI](https://ui.aceternity.com/docs/cli)
+[Simplistic SaaS TemplateNew](https://ui.aceternity.com/templates/simplistic-saas-template)
+[Nodus Marketing Template](https://ui.aceternity.com/templates/nodus-agent-template)
+[Agenforce Marketing Template](https://ui.aceternity.com/templates/agenforce-marketing-template)
+[AI SaaS Template](https://ui.aceternity.com/templates/ai-saas-template)
+[Startup Landing Page Template](https://ui.aceternity.com/templates/startup-landing-page-template)
+[Proactiv Marketing Template](https://ui.aceternity.com/templates/proactiv-marketing-template)
+[Minimal Portfolio Template](https://ui.aceternity.com/templates/minimal-portfolio-template)
+[Minimalist Portfolio Template](https://ui.aceternity.com/templates/minimalist-portfolio-template)
+[Cryptgen Marketing](https://ui.aceternity.com/templates/cryptgen-marketing-aceternity)
+[Playful Marketing Template](https://ui.aceternity.com/templates/playful-marketing-aceternity)
+[Agenlabs Agency](https://ui.aceternity.com/templates/agenlabs-agency-template)
+[Devpro Portfolio](https://ui.aceternity.com/templates/devpro-portfolio-template)
+[Foxtrot Marketing](https://ui.aceternity.com/templates/foxtrot-marketing-template)
+[Sidefolio Portfolio](https://ui.aceternity.com/templates/sidefolio-portfolio-template)
+[Schedule Marketing](https://ui.aceternity.com/templates/schedule-marketing-template)
+[Hero Sections](https://ui.aceternity.com/blocks/hero-sections)
+[ShadersNew](https://ui.aceternity.com/blocks/shaders)
+[IllustrationsNew](https://ui.aceternity.com/blocks/illustrations)
+[Logo Clouds](https://ui.aceternity.com/blocks/logo-clouds)
+[Bento Grids](https://ui.aceternity.com/blocks/bento-grids)
+[CTA Sections](https://ui.aceternity.com/blocks/cta-sections)
+[Testimonials](https://ui.aceternity.com/blocks/testimonials)
+[Team SectionsNew](https://ui.aceternity.com/blocks/team-sections)
+[Feature sections](https://ui.aceternity.com/blocks/feature-sections)
+[Pricing sections](https://ui.aceternity.com/blocks/pricing-sections)
+[Cards](https://ui.aceternity.com/blocks/cards)
+[Navbars](https://ui.aceternity.com/blocks/navbars)
+[Footers](https://ui.aceternity.com/blocks/footers)
+[Login and Signup](https://ui.aceternity.com/blocks/login-and-signup-sections)
+[Contact Sections](https://ui.aceternity.com/blocks/contact-sections)
+[Blog Sections](https://ui.aceternity.com/blocks/blog-sections)
+[Blog Content Sections](https://ui.aceternity.com/blocks/blog-content-sections)
+[FAQs](https://ui.aceternity.com/blocks/faqs)
+[Sidebars](https://ui.aceternity.com/blocks/sidebars)
+[Stats Sections](https://ui.aceternity.com/blocks/stats-sections)
+[BackgroundsNew](https://ui.aceternity.com/blocks/backgrounds)
+[Text AnimationsNew](https://ui.aceternity.com/blocks/text-animations)
+[Webcam Pixel GridNew](https://ui.aceternity.com/components/webcam-pixel-grid)
+[Images BadgeNew](https://ui.aceternity.com/components/images-badge)
+[Parallax Hero ImagesNew](https://ui.aceternity.com/components/parallax-hero-images)
+[ScalesNew](https://ui.aceternity.com/components/scales)
+[Dotted Glow BackgroundNew](https://ui.aceternity.com/components/dotted-glow-background)
+[Background Ripple EffectNew](https://ui.aceternity.com/components/background-ripple-effect)
+[Sparkles](https://ui.aceternity.com/components/sparkles)
+[Background Gradient](https://ui.aceternity.com/components/background-gradient)
+[Gradient Animation](https://ui.aceternity.com/components/background-gradient-animation)
+[Wavy Background](https://ui.aceternity.com/components/wavy-background)
+[Background Boxes](https://ui.aceternity.com/components/background-boxes)
+[Background Beams](https://ui.aceternity.com/components/background-beams)
+[Background Beams With Collision](https://ui.aceternity.com/components/background-beams-with-collision)
+
+[Background Lines](https://ui.aceternity.com/components/background-lines)
+[Aurora Background](https://ui.aceternity.com/components/aurora-background)
+[Meteors](https://ui.aceternity.com/components/meteors)
+[Glowing Stars](https://ui.aceternity.com/components/glowing-stars-effect)
+[Shooting Stars](https://ui.aceternity.com/components/shooting-stars-and-stars-background)
+[Vortex](https://ui.aceternity.com/components/vortex)
+[Spotlight](https://ui.aceternity.com/components/spotlight)
+[Spotlight New](https://ui.aceternity.com/components/spotlight-new)
+[Canvas Reveal Effect](https://ui.aceternity.com/components/canvas-reveal-effect)
+[SVG Mask Effect](https://ui.aceternity.com/components/svg-mask-effect)
+[Tracing Beam](https://ui.aceternity.com/components/tracing-beam)
+[Lamp effect](https://ui.aceternity.com/components/lamp-effect)
+[Grid and Dot Backgrounds](https://ui.aceternity.com/components/grid-and-dot-backgrounds)
+[Glowing Effect](https://ui.aceternity.com/components/glowing-effect)
+[Google Gemini Effect](https://ui.aceternity.com/components/google-gemini-effect)
+[Keyboard](https://ui.aceternity.com/components/keyboard)
+[TerminalNew](https://ui.aceternity.com/components/terminal)
+[Tooltip CardNew](https://ui.aceternity.com/components/tooltip-card)
+[ASCII ArtNew](https://ui.aceternity.com/components/ascii-art)
+[Pixelated CanvasNew](https://ui.aceternity.com/components/pixelated-canvas)
+[3D Card Effect](https://ui.aceternity.com/components/3d-card-effect)
+[Evervault Card](https://ui.aceternity.com/components/evervault-card)
+[Card Stack](https://ui.aceternity.com/components/card-stack)
+[Card Hover Effect](https://ui.aceternity.com/components/card-hover-effect)
+[Wobble Card](https://ui.aceternity.com/components/wobble-card)
+[Expandable Card](https://ui.aceternity.com/components/expandable-card)
+[Card Spotlight](https://ui.aceternity.com/components/card-spotlight)
+[Focus Cards](https://ui.aceternity.com/components/focus-cards)
+[Infinite Moving Cards](https://ui.aceternity.com/components/infinite-moving-cards)
+[Draggable Card](https://ui.aceternity.com/components/draggable-card)
+[Comet CardNew](https://ui.aceternity.com/components/comet-card)
+[Glare Card](https://ui.aceternity.com/components/glare-card)
+[Direction Aware Hover](https://ui.aceternity.com/components/direction-aware-hover)
+[Parallax Scroll](https://ui.aceternity.com/components/parallax-scroll)
+[Sticky Scroll Reveal](https://ui.aceternity.com/components/sticky-scroll-reveal)
+[Macbook Scroll](https://ui.aceternity.com/components/macbook-scroll)
+[Container Scroll Animation](https://ui.aceternity.com/components/container-scroll-animation)
+[Hero Parallax](https://ui.aceternity.com/components/hero-parallax)
+[Canvas TextNew](https://ui.aceternity.com/components/canvas-text)
+[Encrypted TextNew](https://ui.aceternity.com/components/encrypted-text)
+[Layout Text FlipNew](https://ui.aceternity.com/components/layout-text-flip)
+[Colourful Text](https://ui.aceternity.com/components/colourful-text)
+[Text Generate Effect](https://ui.aceternity.com/components/text-generate-effect)
+[Typewriter Effect](https://ui.aceternity.com/components/typewriter-effect)
+[Flip Words](https://ui.aceternity.com/components/flip-words)
+[Text Hover Effect](https://ui.aceternity.com/components/text-hover-effect)
+[Container Text Flip](https://ui.aceternity.com/components/container-text-flip)
+[Hero Highlight](https://ui.aceternity.com/components/hero-highlight)
+[Text Reveal Card](https://ui.aceternity.com/components/text-reveal-card)
+[Text Flipping BoardNew](https://ui.aceternity.com/components/text-flipping-board)
+[Noise BackgroundNew](https://ui.aceternity.com/components/noise-background)
+[Tailwind CSS buttons](https://ui.aceternity.com/components/tailwindcss-buttons)
+[Hover Border Gradient](https://ui.aceternity.com/components/hover-border-gradient)
+[Moving Border](https://ui.aceternity.com/components/moving-border)
+[Stateful Button](https://ui.aceternity.com/components/stateful-button)
+[Multi Step Loader](https://ui.aceternity.com/components/multi-step-loader)
+[Loader](https://ui.aceternity.com/components/loader)
+[Floating Navbar](https://ui.aceternity.com/components/floating-navbar)
+[Navbar Menu](https://ui.aceternity.com/components/navbar-menu)
+[Sidebar](https://ui.aceternity.com/components/sidebar)
+[Floating Dock](https://ui.aceternity.com/components/floating-dock)
+[Tabs](https://ui.aceternity.com/components/tabs)
+[Resizable Navbar](https://ui.aceternity.com/components/resizable-navbar)
+
+[Sticky Banner](https://ui.aceternity.com/components/sticky-banner)
+[Signup Form](https://ui.aceternity.com/components/signup-form)
+[Placeholders And Vanish Input](https://ui.aceternity.com/components/placeholders-and-vanish-input)
+[File Upload](https://ui.aceternity.com/components/file-upload)
+[Gooey InputNew](https://ui.aceternity.com/components/gooey-input)
+[Dither ShaderNew](https://ui.aceternity.com/components/dither-shader)
+[Animated Modal](https://ui.aceternity.com/components/animated-modal)
+[Animated Tooltip](https://ui.aceternity.com/components/animated-tooltip)
+[Link Preview](https://ui.aceternity.com/components/link-preview)
+[Images Slider](https://ui.aceternity.com/components/images-slider)
+[Carousel](https://ui.aceternity.com/components/carousel)
+[Apple Cards Carousel](https://ui.aceternity.com/components/apple-cards-carousel)
+[Animated Testimonials](https://ui.aceternity.com/components/animated-testimonials)
+[Layout Grid](https://ui.aceternity.com/components/layout-grid)
+[Bento Grid](https://ui.aceternity.com/components/bento-grid)
+[Container Cover](https://ui.aceternity.com/components/container-cover)
+[GitHub Globe](https://ui.aceternity.com/components/github-globe)
+[World Map](https://ui.aceternity.com/components/world-map)
+[Timeline](https://ui.aceternity.com/components/timeline)
+[Compare](https://ui.aceternity.com/components/compare)
+[Codeblock](https://ui.aceternity.com/components/code-block)
+[Following Pointer](https://ui.aceternity.com/components/following-pointer)
+[Pointer Highlight](https://ui.aceternity.com/components/pointer-highlight)
+[Lens](https://ui.aceternity.com/components/lens)
+[3D GlobeNew](https://ui.aceternity.com/components/3d-globe)
+[3D Pin](https://ui.aceternity.com/components/3d-pin)
+[3D Marquee](https://ui.aceternity.com/components/3d-marquee)
+[Feature Sections Free](https://ui.aceternity.com/components/feature-sections-free)
+[Cards Sections Free](https://ui.aceternity.com/components/cards-free)
+[Hero Sections Free](https://ui.aceternity.com/components/hero-sections-free)
+
+## Build faster with All-Access
+
+Get access to all templates, components and blocks for a one-time payment.
+[Get All-Access](https://ui.aceternity.com/pricing)
+Trusted by 120,000+ users worldwide
+
+# Components
+
+Explore the best in class, shadcn compatible components with microinteractions and animations.
+[Text Flipping BoardA split-flap display component that animates characters with flip transitions, inspired by Vestaboard.](https://ui.aceternity.com/components/text-flipping-board)
+Text Flipping Board
+A split-flap display component that animates characters with flip transitions, inspired by Vestaboard.
+[Tooltip CardA tooltip card container that follows mouse pointer when hovered over](https://ui.aceternity.com/components/tooltip-card)
+Tooltip Card
+A tooltip card container that follows mouse pointer when hovered over
+[Hero Sections21+ blocksA collection of hero sections that are modern and stand outIncluded with all-access](https://ui.aceternity.com/blocks/hero-sections)
+Hero Sections
+A collection of hero sections that are modern and stand out
+[Shaders3+ blocksA collection of reusable shaders for your backgrounds.Included with all-access](https://ui.aceternity.com/blocks/shaders)
+Shaders
+A collection of reusable shaders for your backgrounds.
+[Fey.com Macbook ScrollScroll through the page and see the image come out of the screen, as seen on Fey.com website.](https://ui.aceternity.com/components/macbook-scroll)
+Fey.com Macbook Scroll
+Scroll through the page and see the image come out of the screen, as seen on Fey.com website.
+[Parallax Hero ImagesMouse-driven parallax effect, perfect for hero sections. Images blur fade in and move at different depths.](https://ui.aceternity.com/components/parallax-hero-images)
+Parallax Hero Images
+Mouse-driven parallax effect, perfect for hero sections. Images blur fade in and move at different depths.
+[Gooey InputA search-style input that expands with a gooey SVG filter and shared layout animation](https://ui.aceternity.com/components/gooey-input)
+Gooey Input
+A search-style input that expands with a gooey SVG filter and shared layout animation
+[Logo Clouds5+ blocksA collection of logo clouds with micro interactions and minimal animationsIncluded with all-access](https://ui.aceternity.com/blocks/logo-clouds)
+Logo Clouds
+A collection of logo clouds with micro interactions and minimal animations
+[TerminalA mac style terminal component with bash syntax highlighting and typewriter effect.](https://ui.aceternity.com/components/terminal)
+Terminal
+A mac style terminal component with bash syntax highlighting and typewriter effect.
+[3D Card EffectA card perspective effect, hover over the card to elevate card elements.](https://ui.aceternity.com/components/3d-card-effect)
+3D Card Effect
+A card perspective effect, hover over the card to elevate card elements.
+[ASCII ArtConvert any image to ASCII art with customizable charsets, colors, and animations.](https://ui.aceternity.com/components/ascii-art)
+ASCII Art
+Convert any image to ASCII art with customizable charsets, colors, and animations.
+[Feature Sections18+ blocksA set of feature sections ranging from bento grids to simple layoutsIncluded with all-access](https://ui.aceternity.com/blocks/feature-sections)
+Feature Sections
+A set of feature sections ranging from bento grids to simple layouts
+[Canvas TextAnimated text component with colorful curved lines rendered on canvas, clipped to the text shape.](https://ui.aceternity.com/components/canvas-text)
+Canvas Text
+Animated text component with colorful curved lines rendered on canvas, clipped to the text shape.
+[Backgrounds11+ blocksA set of beautiful, creative backgrounds for landing pagesIncluded with all-access](https://ui.aceternity.com/blocks/backgrounds)
+Backgrounds
+A set of beautiful, creative backgrounds for landing pages
+[3D GlobeA realistic globe component with tooltips and avatar tips](https://ui.aceternity.com/components/3d-globe)
+3D Globe
+A realistic globe component with tooltips and avatar tips
+[Dither ShaderA real-time ordered dithering effect for images, perfect for pixel art and retro aesthetics.](https://ui.aceternity.com/components/dither-shader)
+Dither Shader
+A real-time ordered dithering effect for images, perfect for pixel art and retro aesthetics.
+[Bento Grids6+ blocksA set of bento grids for various use casesIncluded with all-access](https://ui.aceternity.com/blocks/bento-grids)
+Bento Grids
+A set of bento grids for various use cases
+[Dotted Glow BackgroundA background effect with opacity animation, glow effect and more.](https://ui.aceternity.com/components/dotted-glow-background)
+Dotted Glow Background
+A background effect with opacity animation, glow effect and more.
+
+# Components
+
+[Blog Content Sections2+ blocksContent sections for your single blog postsIncluded with all-access](https://ui.aceternity.com/blocks/blog-content-sections)
+Blog Content Sections
+Content sections for your single blog posts
+[Encrypted TextA text component that reveals the text gradually, gibberish effect.](https://ui.aceternity.com/components/encrypted-text)
+Encrypted Text
+A text component that reveals the text gradually, gibberish effect.
+[Images BadgeA badge with images that can be hovered to reveal more images.](https://ui.aceternity.com/components/images-badge)
+Images Badge
+A badge with images that can be hovered to reveal more images.
+[KeyboardA mac style keyboard component with mechanical keys sound effects.](https://ui.aceternity.com/components/keyboard)
+Keyboard
+A mac style keyboard component with mechanical keys sound effects.
+[Noise BackgroundA dynamic background effect with animated gradients, noise texture, and smooth motion.](https://ui.aceternity.com/components/noise-background)
+Noise Background
+A dynamic background effect with animated gradients, noise texture, and smooth motion.
+[Blog Sections3+ blocksBlog sections with search and filtersIncluded with all-access](https://ui.aceternity.com/blocks/blog-sections)
+Blog Sections
+Blog sections with search and filters
+[Cards4+ blocksA set of cards that can be used for different use casesIncluded with all-access](https://ui.aceternity.com/blocks/cards)
+Cards
+A set of cards that can be used for different use cases
+[ScalesA repeating diagonal, horizontal, or vertical line pattern background effect.](https://ui.aceternity.com/components/scales)
+Scales
+A repeating diagonal, horizontal, or vertical line pattern background effect.
+[Text Hover EffectA text hover effect that animates and outlines gradient on hover, as seen on x.ai](https://ui.aceternity.com/components/text-hover-effect)
+Text Hover Effect
+A text hover effect that animates and outlines gradient on hover, as seen on x.ai
+[Webcam Pixel GridA real-time webcam pixel grid effect, perfect for pixel art and retro aesthetics.](https://ui.aceternity.com/components/webcam-pixel-grid)
+Webcam Pixel Grid
+A real-time webcam pixel grid effect, perfect for pixel art and retro aesthetics.
+[Animated TestimonialsMinimal testimonials sections with image and quote.](https://ui.aceternity.com/components/animated-testimonials)
+Animated Testimonials
+Minimal testimonials sections with image and quote.
+[Contact Sections4+ blocksContact sections with forms and micro interactionsIncluded with all-access](https://ui.aceternity.com/blocks/contact-sections)
+Contact Sections
+Contact sections with forms and micro interactions
+[Apple Cards CarouselA sleek and minimal carousel implementation, as seen on apple.com](https://ui.aceternity.com/components/apple-cards-carousel)
+Apple Cards Carousel
+A sleek and minimal carousel implementation, as seen on apple.com
+[Background Beams With CollisionExploding beams in the background](https://ui.aceternity.com/components/background-beams-with-collision)
+Background Beams With Collision
+Exploding beams in the background
+[CTA Sections6+ blocksCTA sections with modern and minimalist stylesIncluded with all-access](https://ui.aceternity.com/blocks/cta-sections)
+CTA Sections
+CTA sections with modern and minimalist styles
+[Background LinesA set of svg paths that animate in a wave pattern. Good for hero sections background, as seen on height.app](https://ui.aceternity.com/components/background-lines)
+Background Lines
+A set of svg paths that animate in a wave pattern. Good for hero sections background, as seen on height.app
+[Frequently asked questions4+ blocksElegant and minimal FAQs with grid, accordions and micro-interactionsIncluded with all-access](https://ui.aceternity.com/blocks/faqs)
+Frequently asked questions
+Elegant and minimal FAQs with grid, accordions and micro-interactions
+[Background Ripple EffectA grid of cells that ripple when clicked.](https://ui.aceternity.com/components/background-ripple-effect)
+Background Ripple Effect
+A grid of cells that ripple when clicked.
+[Card SpotlightA card component with a spotlight effect revealing a radial gradient background](https://ui.aceternity.com/components/card-spotlight)
+Card Spotlight
+A card component with a spotlight effect revealing a radial gradient background
+[Footers4+ blocksClean footers with a variety of styles and layoutsIncluded with all-access](https://ui.aceternity.com/blocks/footers)
+Footers
+
+# Components
+
+Clean footers with a variety of styles and layouts
+[CarouselA customizable carousel with microinteractions and slider.](https://ui.aceternity.com/components/carousel)
+Carousel
+A customizable carousel with microinteractions and slider.
+[Code BlockA configurable code block component built on top of react-syntax-highlighter.](https://ui.aceternity.com/components/code-block)
+Code Block
+A configurable code block component built on top of react-syntax-highlighter.
+[Illustrations22+ blocksA set of motion illustrations for blocks, sections and pagesIncluded with all-access](https://ui.aceternity.com/blocks/illustrations)
+Illustrations
+A set of motion illustrations for blocks, sections and pages
+[Colourful TextA text component with various colours, filter and scale effects.](https://ui.aceternity.com/components/colourful-text)
+Colourful Text
+A text component with various colours, filter and scale effects.
+[Comet CardA perspective, 3D, Tilt card as seen on Perplexity Comet's website.](https://ui.aceternity.com/components/comet-card)
+Comet Card
+A perspective, 3D, Tilt card as seen on Perplexity Comet's website.
+[Login and Signup Sections6+ blocksLogin, registration and authentication form sectionsIncluded with all-access](https://ui.aceternity.com/blocks/login-and-signup-sections)
+Login and Signup Sections
+Login, registration and authentication form sections
+[CompareA comparison component between two images, slide or drag to compare](https://ui.aceternity.com/components/compare)
+Compare
+A comparison component between two images, slide or drag to compare
+[Navbars7+ blocksSimple and elegant headers for your website.Included with all-access](https://ui.aceternity.com/blocks/navbars)
+Navbars
+Simple and elegant headers for your website.
+[CoverA Cover component that wraps any children, providing beams and space effect, hover to reveal speed.](https://ui.aceternity.com/components/container-cover)
+Cover
+A Cover component that wraps any children, providing beams and space effect, hover to reveal speed.
+[Container Text FlipA container that flips through words, animating the width.](https://ui.aceternity.com/components/container-text-flip)
+Container Text Flip
+A container that flips through words, animating the width.
+[Draggable CardA tiltable, draggable card component that jumps on bounds.](https://ui.aceternity.com/components/draggable-card)
+Draggable Card
+A tiltable, draggable card component that jumps on bounds.
+[Expandable CardsClick cards to expand them and show additional information](https://ui.aceternity.com/components/expandable-card)
+Expandable Cards
+Click cards to expand them and show additional information
+[Pricing sections6+ blocksMinimal and elegant pricing sections.Included with all-access](https://ui.aceternity.com/blocks/pricing-sections)
+Pricing sections
+Minimal and elegant pricing sections.
+[Sidebars3+ blocksElegant sidebars with hover effects and open, close statesIncluded with all-access](https://ui.aceternity.com/blocks/sidebars)
+Sidebars
+Elegant sidebars with hover effects and open, close states
+[Feature SectionsA set of feature sections ranging from bento grids to simple layouts](https://ui.aceternity.com/components/feature-sections-free)
+Feature Sections
+A set of feature sections ranging from bento grids to simple layouts
+[File UploadA minimal file upload form with background grid, drag and drop, and micro interactions.](https://ui.aceternity.com/components/file-upload)
+File Upload
+A minimal file upload form with background grid, drag and drop, and micro interactions.
+[Stats Sections4+ blocksPerfect for displaying numbers, stats and changelogsIncluded with all-access](https://ui.aceternity.com/blocks/stats-sections)
+Stats Sections
+Perfect for displaying numbers, stats and changelogs
+[Floating DockA floating dock mac os style component, acts as a navigation bar.](https://ui.aceternity.com/components/floating-dock)
+Floating Dock
+A floating dock mac os style component, acts as a navigation bar.
+[Focus CardsHover over the card to focus on it, blurring the rest of the cards.](https://ui.aceternity.com/components/focus-cards)
+Focus Cards
+Hover over the card to focus on it, blurring the rest of the cards.
+[Hero SectionsA set of hero sections ranging from simple to complex layouts](https://ui.aceternity.com/components/hero-sections-free)
+Hero Sections
+A set of hero sections ranging from simple to complex layouts
+
+# Components
+
+[Layout Text FlipA text flip effect that changes the layout of surrounding text](https://ui.aceternity.com/components/layout-text-flip)
+Layout Text Flip
+A text flip effect that changes the layout of surrounding text
+[Team Sections4+ blocksPages and blocks to showcase your team and cultureIncluded with all-access](https://ui.aceternity.com/blocks/team-sections)
+Team Sections
+Pages and blocks to showcase your team and culture
+[Testimonials7+ blocksTestimonials sections for social proof and trustIncluded with all-access](https://ui.aceternity.com/blocks/testimonials)
+Testimonials
+Testimonials sections for social proof and trust
+[LensA lens component to zoom into images, videos, or practically anything.](https://ui.aceternity.com/components/lens)
+Lens
+A lens component to zoom into images, videos, or practically anything.
+[LoadersA set of simple and minimal loaders for your loading screens and components.](https://ui.aceternity.com/components/loader)
+Loaders
+A set of simple and minimal loaders for your loading screens and components.
+[Text Animations4+ blocksText animations components for headings and paragraphsIncluded with all-access](https://ui.aceternity.com/blocks/text-animations)
+Text Animations
+Text animations components for headings and paragraphs
+[Pixelated CanvasConvert any image to a pixelated canvas mouse distortion effects, as seen on Tailwind CSS Website.](https://ui.aceternity.com/components/pixelated-canvas)
+Pixelated Canvas
+Convert any image to a pixelated canvas mouse distortion effects, as seen on Tailwind CSS Website.
+[Pointer HighlightA component that highlights text when it's in view, with a pointer and border.](https://ui.aceternity.com/components/pointer-highlight)
+Pointer Highlight
+A component that highlights text when it's in view, with a pointer and border.
+[Resizable NavbarA navbar that changes width on scroll, responsive and animated.](https://ui.aceternity.com/components/resizable-navbar)
+Resizable Navbar
+A navbar that changes width on scroll, responsive and animated.
+[Stateful ButtonA button that shows a loading state when clicked, and a success state when the action is completed.](https://ui.aceternity.com/components/stateful-button)
+Stateful Button
+A button that shows a loading state when clicked, and a success state when the action is completed.
+[Sticky BannerA banner component that sticks to top, hides when user scrolls down](https://ui.aceternity.com/components/sticky-banner)
+Sticky Banner
+A banner component that sticks to top, hides when user scrolls down
+[World MapA world map with animated lines and dots, programatically generated.](https://ui.aceternity.com/components/world-map)
+World Map
+A world map with animated lines and dots, programatically generated.
+[Google Gemini EffectAn effect of SVGs as seen on the Google Gemini Website](https://ui.aceternity.com/components/google-gemini-effect)
+Google Gemini Effect
+An effect of SVGs as seen on the Google Gemini Website
+[Tracing BeamA Beam that follows the path of an SVG as the user scrolls. Adjusts beam length with scroll speed.](https://ui.aceternity.com/components/tracing-beam)
+Tracing Beam
+A Beam that follows the path of an SVG as the user scrolls. Adjusts beam length with scroll speed.
+[3D MarqueeA 3D Marquee effect with grid, good for showcasing testimonials and hero sections](https://ui.aceternity.com/components/3d-marquee)
+3D Marquee
+A 3D Marquee effect with grid, good for showcasing testimonials and hero sections
+[Animated ModalA customizable, compound modal component with animated transitions](https://ui.aceternity.com/components/animated-modal)
+Animated Modal
+A customizable, compound modal component with animated transitions
+[Animated TooltipA cool tooltip that reveals on hover, follows mouse pointer](https://ui.aceternity.com/components/animated-tooltip)
+Animated Tooltip
+A cool tooltip that reveals on hover, follows mouse pointer
+[Aurora BackgroundA subtle Aurora or Southern Lights background for your website.](https://ui.aceternity.com/components/aurora-background)
+Aurora Background
+A subtle Aurora or Southern Lights background for your website.
+[Background BeamsMultiple background beams that follow a path of SVG, makes a good hero section background.](https://ui.aceternity.com/components/background-beams)
+Background Beams
+Multiple background beams that follow a path of SVG, makes a good hero section background.
+
+# Components
+
+[Background Gradient AnimationA smooth and elegant background gradient animation that changes the gradient position over time.](https://ui.aceternity.com/components/background-gradient-animation)
+Background Gradient Animation
+A smooth and elegant background gradient animation that changes the gradient position over time.
+[Bento GridA skewed grid layout with Title, description and a header component](https://ui.aceternity.com/components/bento-grid)
+Bento Grid
+A skewed grid layout with Title, description and a header component
+[Canvas Reveal EffectA dot background that expands on hover, as seen on Clerk's website](https://ui.aceternity.com/components/canvas-reveal-effect)
+Canvas Reveal Effect
+A dot background that expands on hover, as seen on Clerk's website
+[Card StackCards stack on top of each other after some interval. Perfect for showing testimonials.](https://ui.aceternity.com/components/card-stack)
+Card Stack
+Cards stack on top of each other after some interval. Perfect for showing testimonials.
+[CardsA set of cards that can be used for different use cases](https://ui.aceternity.com/components/cards-free)
+Cards
+A set of cards that can be used for different use cases
+[Container Scroll AnimationA scroll animation that rotates in 3d on scroll. Perfect for hero or marketing sections.](https://ui.aceternity.com/components/container-scroll-animation)
+Container Scroll Animation
+A scroll animation that rotates in 3d on scroll. Perfect for hero or marketing sections.
+[Evervault CardA cool card with amazing hover effect, reveals encrypted text and a mixed gradient.](https://ui.aceternity.com/components/evervault-card)
+Evervault Card
+A cool card with amazing hover effect, reveals encrypted text and a mixed gradient.
+[Flip WordsA component that flips through a list of words](https://ui.aceternity.com/components/flip-words)
+Flip Words
+A component that flips through a list of words
+[GitHub GlobeA globe animation as seen on GitHub's homepage. Interactive and customizable.](https://ui.aceternity.com/components/github-globe)
+GitHub Globe
+A globe animation as seen on GitHub's homepage. Interactive and customizable.
+[Glare CardA glare effect that happens on hover, as seen on Linear's website](https://ui.aceternity.com/components/glare-card)
+Glare Card
+A glare effect that happens on hover, as seen on Linear's website
+[Glowing EffectA border glowing effect that adapts to any container or card, as seen on Cursor's website.](https://ui.aceternity.com/components/glowing-effect)
+Glowing Effect
+A border glowing effect that adapts to any container or card, as seen on Cursor's website.
+[Glowing Background Stars CardCard background stars that animate on hover and animate anyway](https://ui.aceternity.com/components/glowing-stars-effect)
+Glowing Background Stars Card
+Card background stars that animate on hover and animate anyway
+[Grid and Dot BackgroundsA simple grid and dots background to make your sections stand out.](https://ui.aceternity.com/components/grid-and-dot-backgrounds)
+Grid and Dot Backgrounds
+A simple grid and dots background to make your sections stand out.
+[Hero HighlightA background effect with a text highlight component, perfect for hero sections.](https://ui.aceternity.com/components/hero-highlight)
+Hero Highlight
+A background effect with a text highlight component, perfect for hero sections.
+[Hero ParallaxA scroll effect with rotation, translation and opacity animations.](https://ui.aceternity.com/components/hero-parallax)
+Hero Parallax
+A scroll effect with rotation, translation and opacity animations.
+[Infinite Moving CardsA customizable group of cards that move infinitely in a loop. Made with Framer Motion and Tailwind CSS.](https://ui.aceternity.com/components/infinite-moving-cards)
+Infinite Moving Cards
+A customizable group of cards that move infinitely in a loop. Made with Framer Motion and Tailwind CSS.
+[Lamp Section HeaderA lamp effect as seen on linear, great for section headers.](https://ui.aceternity.com/components/lamp-effect)
+Lamp Section Header
+A lamp effect as seen on linear, great for section headers.
+[Layout GridA layout effect that animates the grid item on click, powered by framer motion layout](https://ui.aceternity.com/components/layout-grid)
+Layout Grid
+A layout effect that animates the grid item on click, powered by framer motion layout
+[Link PreviewDynamic link previews for your anchor tags](https://ui.aceternity.com/components/link-preview)
+Link Preview
+Dynamic link previews for your anchor tags
+
+# Components
+
+[Meteor EffectA group of beams in the background of a container, sort of like meteors.](https://ui.aceternity.com/components/meteors)
+Meteor Effect
+A group of beams in the background of a container, sort of like meteors.
+[Moving BorderA border that moves around the container. Perfect for making your buttons stand out.](https://ui.aceternity.com/components/moving-border)
+Moving Border
+A border that moves around the container. Perfect for making your buttons stand out.
+[Parallax Grid ScrollA grid where two columns scroll in oposite directions, giving a parallax effect.](https://ui.aceternity.com/components/parallax-scroll)
+Parallax Grid Scroll
+A grid where two columns scroll in oposite directions, giving a parallax effect.
+[Placeholders And Vanish InputSliding in placeholders and vanish effect of input on submit](https://ui.aceternity.com/components/placeholders-and-vanish-input)
+Placeholders And Vanish Input
+Sliding in placeholders and vanish effect of input on submit
+[Shooting Stars and Stars BackgroundA shooting star animation on top of a starry background, as seen on figmaplug.in](https://ui.aceternity.com/components/shooting-stars-and-stars-background)
+Shooting Stars and Stars Background
+A shooting star animation on top of a starry background, as seen on figmaplug.in
+[SidebarExpandable sidebar that expands on hover, mobile responsive and dark mode support](https://ui.aceternity.com/components/sidebar)
+Sidebar
+Expandable sidebar that expands on hover, mobile responsive and dark mode support
+[Signup FormA customizable form built on top of shadcn's input and label, with a touch of framer motion](https://ui.aceternity.com/components/signup-form)
+Signup Form
+A customizable form built on top of shadcn's input and label, with a touch of framer motion
+[SparklesA configurable sparkles component that can be used as a background or as a standalone component.](https://ui.aceternity.com/components/sparkles)
+Sparkles
+A configurable sparkles component that can be used as a background or as a standalone component.
+[Spotlight NewA new spotlight component with left and right spotlight, configurable and customizable.](https://ui.aceternity.com/components/spotlight-new)
+Spotlight New
+A new spotlight component with left and right spotlight, configurable and customizable.
+[SpotlightA spotlight effect with Tailwind CSS, good for drawing attention to a particular element on the page.](https://ui.aceternity.com/components/spotlight)
+Spotlight
+A spotlight effect with Tailwind CSS, good for drawing attention to a particular element on the page.
+[Sticky Scroll RevealA sticky container that sticks while scrolling, text reveals on scroll](https://ui.aceternity.com/components/sticky-scroll-reveal)
+Sticky Scroll Reveal
+A sticky container that sticks while scrolling, text reveals on scroll
+[SVG Mask EffectA mask reveal effect, hover the cursor over a container to reveal what's underneath.](https://ui.aceternity.com/components/svg-mask-effect)
+SVG Mask Effect
+A mask reveal effect, hover the cursor over a container to reveal what's underneath.
+[Animated TabsTabs to switch content, click on a tab to check background animation.](https://ui.aceternity.com/components/tabs)
+Animated Tabs
+Tabs to switch content, click on a tab to check background animation.
+[Text Generate EffectA cool text effect that fades in text on page load, one by one.](https://ui.aceternity.com/components/text-generate-effect)
+Text Generate Effect
+A cool text effect that fades in text on page load, one by one.
+[Text Reveal CardMousemove effect to reveal text content at the bottom of the card.](https://ui.aceternity.com/components/text-reveal-card)
+Text Reveal Card
+Mousemove effect to reveal text content at the bottom of the card.
+[Typewriter EffectText generates as if it is being typed on the screen.](https://ui.aceternity.com/components/typewriter-effect)
+Typewriter Effect
+Text generates as if it is being typed on the screen.
+[Vortex BackgroundA wavy, swirly, vortex background ideal for CTAs and backgrounds.](https://ui.aceternity.com/components/vortex)
+Vortex Background
+A wavy, swirly, vortex background ideal for CTAs and backgrounds.
+[Wavy BackgroundA cool background effect with waves that move.](https://ui.aceternity.com/components/wavy-background)
+Wavy Background
+A cool background effect with waves that move.
+[Wobble CardA card effect that translates and scales on mousemove, perfect for feature cards.](https://ui.aceternity.com/components/wobble-card)
+Wobble Card
+
+# Components
+
+A card effect that translates and scales on mousemove, perfect for feature cards.
+[Hover Border GradientA hover effect that expands to the entire container with a gradient border.](https://ui.aceternity.com/components/hover-border-gradient)
+Hover Border Gradient
+A hover effect that expands to the entire container with a gradient border.
+[Multi Step LoaderA step loader for screens that take a lot of time to load.](https://ui.aceternity.com/components/multi-step-loader)
+Multi Step Loader
+A step loader for screens that take a lot of time to load.
+[3D Animated PinA gradient pin that animates on hover, perfect for product links.](https://ui.aceternity.com/components/3d-pin)
+3D Animated Pin
+A gradient pin that animates on hover, perfect for product links.
+[Background BoxesA full width background box container that highlights on hover](https://ui.aceternity.com/components/background-boxes)
+Background Boxes
+A full width background box container that highlights on hover
+[Background GradientAn animated gradient that sits at the background of a card, button or anything.](https://ui.aceternity.com/components/background-gradient)
+Background Gradient
+An animated gradient that sits at the background of a card, button or anything.
+[Hover EffectHover over the cards and the effect slides to the currently hovered card.](https://ui.aceternity.com/components/card-hover-effect)
+Hover Effect
+Hover over the cards and the effect slides to the currently hovered card.
+[Direction Aware HoverA direction aware hover effect using Framer Motion, Tailwindcss and good old javascript.](https://ui.aceternity.com/components/direction-aware-hover)
+Direction Aware Hover
+A direction aware hover effect using Framer Motion, Tailwindcss and good old javascript.
+[Floating NavbarA sticky Navbar that hides on scroll, reveals when scrolled up.](https://ui.aceternity.com/components/floating-navbar)
+Floating Navbar
+A sticky Navbar that hides on scroll, reveals when scrolled up.
+[Following PointerA custom pointer that follows mouse arrow and animates in pointer and content.](https://ui.aceternity.com/components/following-pointer)
+Following Pointer
+A custom pointer that follows mouse arrow and animates in pointer and content.
+[Images SliderA full page slider with images that can be navigated with the keyboard.](https://ui.aceternity.com/components/images-slider)
+Images Slider
+A full page slider with images that can be navigated with the keyboard.
+[Navbar MenuA navbar menu that animates its children on hover, makes a beautiful bignav](https://ui.aceternity.com/components/navbar-menu)
+Navbar Menu
+A navbar menu that animates its children on hover, makes a beautiful bignav
+[Tailwind CSS buttonsA curated list of awesome, battle tested Tailwind CSS buttons components](https://ui.aceternity.com/components/tailwindcss-buttons)
+Tailwind CSS buttons
+A curated list of awesome, battle tested Tailwind CSS buttons components
+[TimelineA timeline component with sticky header and scroll beam follow.](https://ui.aceternity.com/components/timeline)
+Timeline
+A timeline component with sticky header and scroll beam follow.
+We are working hard to bring you more components. Bookmark this page to stay tuned!
+[ceternity UI](https://ui.aceternity.com/)
+ceternity UI
+Access an ever-growing collection of premium, meticulously crafted templates and Component Blocks.
+[Aceternity](https://www.aceternity.com)
+[@mannupaaji](https://twitter.com/mannupaaji)
+- Components
+- [3D Card Effect](https://ui.aceternity.com/components/3d-card-effect)
+- [3D Pin](https://ui.aceternity.com/components/3d-pin)
+- [Animated Tooltip](https://ui.aceternity.com/components/animated-tooltip)
+- [Aurora Background](https://ui.aceternity.com/components/aurora-background)
+- [Background Beams](https://ui.aceternity.com/components/background-beams)
+- [Bento Grid](https://ui.aceternity.com/components/bento-grid)
+- [Card Hover Effect](https://ui.aceternity.com/components/card-hover-effect)
+- [Floating Dock](https://ui.aceternity.com/components/floating-dock)
+- [Globe](https://ui.aceternity.com/components/github-globe)
+- [Hero Parallax](https://ui.aceternity.com/components/hero-parallax)
+- [Infinite Moving Cards](https://ui.aceternity.com/components/infinite-moving-cards)
+- [Lamp Effect](https://ui.aceternity.com/components/lamp-effect)
+- [Macbook Scroll](https://ui.aceternity.com/components/macbook-scroll)
+- [Moving Border](https://ui.aceternity.com/components/moving-border)
+
+# Components
+
+- [Parallax Scroll](https://ui.aceternity.com/components/parallax-scroll)
+- [Sparkles](https://ui.aceternity.com/components/sparkles)
+- [Text Generate Effect](https://ui.aceternity.com/components/text-generate-effect)
+- [Timeline](https://ui.aceternity.com/components/timeline)
+- [Tracing Beam](https://ui.aceternity.com/components/tracing-beam)
+- [Wavy Background](https://ui.aceternity.com/components/wavy-background)
+[3D Card Effect](https://ui.aceternity.com/components/3d-card-effect)
+[3D Pin](https://ui.aceternity.com/components/3d-pin)
+[Animated Tooltip](https://ui.aceternity.com/components/animated-tooltip)
+[Aurora Background](https://ui.aceternity.com/components/aurora-background)
+[Background Beams](https://ui.aceternity.com/components/background-beams)
+[Bento Grid](https://ui.aceternity.com/components/bento-grid)
+[Card Hover Effect](https://ui.aceternity.com/components/card-hover-effect)
+[Floating Dock](https://ui.aceternity.com/components/floating-dock)
+[Globe](https://ui.aceternity.com/components/github-globe)
+[Hero Parallax](https://ui.aceternity.com/components/hero-parallax)
+[Infinite Moving Cards](https://ui.aceternity.com/components/infinite-moving-cards)
+[Lamp Effect](https://ui.aceternity.com/components/lamp-effect)
+[Macbook Scroll](https://ui.aceternity.com/components/macbook-scroll)
+[Moving Border](https://ui.aceternity.com/components/moving-border)
+[Parallax Scroll](https://ui.aceternity.com/components/parallax-scroll)
+[Sparkles](https://ui.aceternity.com/components/sparkles)
+[Text Generate Effect](https://ui.aceternity.com/components/text-generate-effect)
+[Timeline](https://ui.aceternity.com/components/timeline)
+[Tracing Beam](https://ui.aceternity.com/components/tracing-beam)
+[Wavy Background](https://ui.aceternity.com/components/wavy-background)
+- Shadcn Compatible Blocks
+- [Hero Sections](https://ui.aceternity.com/blocks/hero-sections)
+- [Logo Clouds](https://ui.aceternity.com/blocks/logo-clouds)
+- [Bento Grids](https://ui.aceternity.com/blocks/bento-grids)
+- [CTA Sections](https://ui.aceternity.com/blocks/cta-sections)
+- [Testimonials](https://ui.aceternity.com/blocks/testimonials)
+- [Team Sections](https://ui.aceternity.com/blocks/team-sections)
+- [Feature Sections](https://ui.aceternity.com/blocks/feature-sections)
+- [Pricing Sections](https://ui.aceternity.com/blocks/pricing-sections)
+- [Cards](https://ui.aceternity.com/blocks/cards)
+- [Navbars](https://ui.aceternity.com/blocks/navbars)
+- [Footers](https://ui.aceternity.com/blocks/footers)
+- [Login and Signup](https://ui.aceternity.com/blocks/login-and-signup-sections)
+- [Contact sections](https://ui.aceternity.com/blocks/contact-sections)
+- [Blog Sections](https://ui.aceternity.com/blocks/blog-sections)
+- [Blog Content Sections](https://ui.aceternity.com/blocks/blog-content-sections)
+- [FAQs](https://ui.aceternity.com/blocks/faqs)
+- [Sidebars](https://ui.aceternity.com/blocks/sidebars)
+- [Stats Sections](https://ui.aceternity.com/blocks/stats-sections)
+- [Backgrounds](https://ui.aceternity.com/blocks/backgrounds)
+[Hero Sections](https://ui.aceternity.com/blocks/hero-sections)
+[Logo Clouds](https://ui.aceternity.com/blocks/logo-clouds)
+[Bento Grids](https://ui.aceternity.com/blocks/bento-grids)
+[CTA Sections](https://ui.aceternity.com/blocks/cta-sections)
+[Testimonials](https://ui.aceternity.com/blocks/testimonials)
+[Team Sections](https://ui.aceternity.com/blocks/team-sections)
+[Feature Sections](https://ui.aceternity.com/blocks/feature-sections)
+[Pricing Sections](https://ui.aceternity.com/blocks/pricing-sections)
+[Cards](https://ui.aceternity.com/blocks/cards)
+[Navbars](https://ui.aceternity.com/blocks/navbars)
+[Footers](https://ui.aceternity.com/blocks/footers)
+[Login and Signup](https://ui.aceternity.com/blocks/login-and-signup-sections)
+[Contact sections](https://ui.aceternity.com/blocks/contact-sections)
+[Blog Sections](https://ui.aceternity.com/blocks/blog-sections)
+[Blog Content Sections](https://ui.aceternity.com/blocks/blog-content-sections)
+[FAQs](https://ui.aceternity.com/blocks/faqs)
+[Sidebars](https://ui.aceternity.com/blocks/sidebars)
+[Stats Sections](https://ui.aceternity.com/blocks/stats-sections)
+[Backgrounds](https://ui.aceternity.com/blocks/backgrounds)
+- Templates
+- [Agenforce Marketing Template](https://ui.aceternity.com/templates/agenforce-marketing-template)
+- [Nodus Marketing Template](https://ui.aceternity.com/templates/nodus-agent-template)
+
+# Components
+
+- [Startup Landing Page Template](https://ui.aceternity.com/templates/startup-landing-page-template)
+- [AI SaaS Template](https://ui.aceternity.com/templates/ai-saas-template)
+- [Proactiv Marketing Template](https://ui.aceternity.com/templates/proactiv-marketing-template)
+- [Agenlabs Agency Template](https://ui.aceternity.com/templates/agenlabs-agency-template)
+- [DevPro Portfolio Template](https://ui.aceternity.com/templates/devpro-portfolio-template)
+- [Foxtrot Marketing Template](https://ui.aceternity.com/templates/foxtrot-marketing-template)
+- [Playful Marketing Template](https://ui.aceternity.com/templates/playful-marketing-aceternity)
+- [Cryptgen Marketing Template](https://ui.aceternity.com/templates/cryptgen-marketing-aceternity)
+- [Schedule Marketing Template](https://ui.aceternity.com/templates/schedule-marketing-template)
+- [Minimal Portfolio Template](https://ui.aceternity.com/templates/minimal-portfolio-template)
+[Agenforce Marketing Template](https://ui.aceternity.com/templates/agenforce-marketing-template)
+[Nodus Marketing Template](https://ui.aceternity.com/templates/nodus-agent-template)
+[Startup Landing Page Template](https://ui.aceternity.com/templates/startup-landing-page-template)
+[AI SaaS Template](https://ui.aceternity.com/templates/ai-saas-template)
+[Proactiv Marketing Template](https://ui.aceternity.com/templates/proactiv-marketing-template)
+[Agenlabs Agency Template](https://ui.aceternity.com/templates/agenlabs-agency-template)
+[DevPro Portfolio Template](https://ui.aceternity.com/templates/devpro-portfolio-template)
+[Foxtrot Marketing Template](https://ui.aceternity.com/templates/foxtrot-marketing-template)
+[Playful Marketing Template](https://ui.aceternity.com/templates/playful-marketing-aceternity)
+[Cryptgen Marketing Template](https://ui.aceternity.com/templates/cryptgen-marketing-aceternity)
+[Schedule Marketing Template](https://ui.aceternity.com/templates/schedule-marketing-template)
+[Minimal Portfolio Template](https://ui.aceternity.com/templates/minimal-portfolio-template)
+- Pages
+- [Explore](https://ui.aceternity.com/explore)
+- [Components](https://ui.aceternity.com/components)
+- [Templates](https://ui.aceternity.com/templates)
+- [Blocks](https://ui.aceternity.com/blocks)
+- [Showcase](https://ui.aceternity.com/showcase)
+- [Blog](https://ui.aceternity.com/blog)
+- [Installation](https://ui.aceternity.com/installation)
+- [Affiliate Program](https://ui.aceternity.com/affiliate-program)
+- [Categories](https://ui.aceternity.com/categories)
+- [Box Shadows](https://ui.aceternity.com/tools/box-shadows)
+- [Pricing](https://ui.aceternity.com/pricing)
+- [Changelog](https://ui.aceternity.com/changelog)
+- [Pro](https://ui.aceternity.com/pro)
+- [Aceternity UI](https://ui.aceternity.com/)
+- [Aceternity Studio](https://www.aceternity.com/)
+- [Licence](https://ui.aceternity.com/licence)
+- [Refunds](https://ui.aceternity.com/refunds)
+- [Privacy Policy](https://ui.aceternity.com/privacy)
+- [Terms and Conditions](https://ui.aceternity.com/terms)
+- [Twitter](https://x.com/aceternitylabs)
+- [Discord](https://discord.gg/ftZbQvCdN7)
+- [Brand Facts](https://ui.aceternity.com/brand-facts)
+- [Guides](https://ui.aceternity.com/guides)
+[Explore](https://ui.aceternity.com/explore)
+[Components](https://ui.aceternity.com/components)
+[Templates](https://ui.aceternity.com/templates)
+[Blocks](https://ui.aceternity.com/blocks)
+[Showcase](https://ui.aceternity.com/showcase)
+[Blog](https://ui.aceternity.com/blog)
+[Installation](https://ui.aceternity.com/installation)
+[Affiliate Program](https://ui.aceternity.com/affiliate-program)
+[Categories](https://ui.aceternity.com/categories)
+[Box Shadows](https://ui.aceternity.com/tools/box-shadows)
+[Pricing](https://ui.aceternity.com/pricing)
+[Changelog](https://ui.aceternity.com/changelog)
+[Pro](https://ui.aceternity.com/pro)
+[Aceternity UI](https://ui.aceternity.com/)
+[Aceternity Studio](https://www.aceternity.com/)
+[Licence](https://ui.aceternity.com/licence)
+[Refunds](https://ui.aceternity.com/refunds)
+[Privacy Policy](https://ui.aceternity.com/privacy)
+[Terms and Conditions](https://ui.aceternity.com/terms)
+[Twitter](https://x.com/aceternitylabs)
+[Discord](https://discord.gg/ftZbQvCdN7)
+[Brand Facts](https://ui.aceternity.com/brand-facts)
+[Guides](https://ui.aceternity.com/guides)
+- Relevant
+- [Best Modern Design Templates](https://ui.aceternity.com/best-modern-design-templates)
+- [Best AI SaaS Templates](https://ui.aceternity.com/best-ai-saas-templates)
+
+# Components
+
+- [Best Marketing Templates](https://ui.aceternity.com/best-marketing-templates)
+- [Best Minimal Templates in React and Next.js](https://ui.aceternity.com/best-minimal-templates-in-react-and-nextjs)
+- [Best components and templates with Framer Motion](https://ui.aceternity.com/best-components-and-templates-with-framer-motion)
+- [Amazing Tailwind CSS and Framer Motion Components](https://ui.aceternity.com/amazing-tailwindcss-and-framer-motion-components)
+- [Best Shadcn Blocks and templates](https://ui.aceternity.com/shadcn-blocks)
+[Best Modern Design Templates](https://ui.aceternity.com/best-modern-design-templates)
+[Best AI SaaS Templates](https://ui.aceternity.com/best-ai-saas-templates)
+[Best Marketing Templates](https://ui.aceternity.com/best-marketing-templates)
+[Best Minimal Templates in React and Next.js](https://ui.aceternity.com/best-minimal-templates-in-react-and-nextjs)
+[Best components and templates with Framer Motion](https://ui.aceternity.com/best-components-and-templates-with-framer-motion)
+[Amazing Tailwind CSS and Framer Motion Components](https://ui.aceternity.com/amazing-tailwindcss-and-framer-motion-components)
+[Best Shadcn Blocks and templates](https://ui.aceternity.com/shadcn-blocks)
+© 2026 Aceternity Labs LLC. All Rights Reserved.

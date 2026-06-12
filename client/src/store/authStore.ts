@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { authApi } from "@/api/authApi";
 import { setAccessToken } from "@/api/axiosInstance";
+import { connectSocket, disconnectSocket } from "@/lib/socket";
+import type { PortalRole } from "@/lib/authRoles";
 
 interface User {
   id: string;
@@ -17,7 +19,7 @@ interface AuthState {
   setUser: (user: User | null, token?: string) => void;
   clearUser: () => void;
   checkAuth: () => Promise<void>;
-  login: (phone: string, password: string) => Promise<void>;
+  login: (phone: string, password: string, portalRole?: PortalRole) => Promise<void>;
   register: (name: string, phone: string, password: string, email?: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -28,12 +30,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: true,
 
   setUser: (user, token) => {
-    if (token) setAccessToken(token);
+    if (token) {
+      setAccessToken(token);
+      connectSocket(token);
+    }
     set({ user, isAuthenticated: !!user, isLoading: false });
   },
 
   clearUser: () => {
     setAccessToken(null);
+    disconnectSocket();
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
 
@@ -42,16 +48,19 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ isLoading: true });
       const json = await authApi.refresh();
       const data = json.data as { accessToken: string; user: User };
+      setAccessToken(data.accessToken);
+      connectSocket(data.accessToken);
       set({ user: data.user, isAuthenticated: true, isLoading: false });
     } catch {
       set({ user: null, isAuthenticated: false, isLoading: false });
     }
   },
 
-  login: async (phone, password) => {
-    const response = await authApi.login({ phone, password });
+  login: async (phone, password, portalRole) => {
+    const response = await authApi.login({ phone, password, portalRole });
     const data = response.data as { accessToken: string; user: User };
     setAccessToken(data.accessToken);
+    connectSocket(data.accessToken);
     set({ user: data.user, isAuthenticated: true, isLoading: false });
   },
 
@@ -59,6 +68,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const response = await authApi.register({ name, phone, password, email });
     const data = response.data as { accessToken: string; user: User };
     setAccessToken(data.accessToken);
+    connectSocket(data.accessToken);
     set({ user: data.user, isAuthenticated: true, isLoading: false });
   },
 
@@ -69,6 +79,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       // Proceed with local logout even if API fails
     }
     setAccessToken(null);
+    disconnectSocket();
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
 }));
