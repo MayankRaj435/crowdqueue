@@ -10,29 +10,7 @@ services:
         value: production
       - key: PORT
         value: "5000"
-      - key: CLIENT_URL
-        scope: run
-      - key: MONGO_URI
-        scope: run
-      - key: REDIS_URL
-        scope: run
-      - key: JWT_SECRET
-        scope: run
-      - key: JWT_REFRESH_SECRET
-        scope: run
       - key: JWT_EXPIRES_IN
         value: 15m
       - key: JWT_REFRESH_EXPIRES_IN
         value: 7d
-      - key: VAPID_PUBLIC_KEY
-        scope: run
-      - key: VAPID_PRIVATE_KEY
-        scope: run
-      - key: VAPID_EMAIL
-        scope: run
-      - key: TWILIO_SID
-        scope: run
-      - key: TWILIO_TOKEN
-        scope: run
-      - key: TWILIO_PHONE
-        scope: run
