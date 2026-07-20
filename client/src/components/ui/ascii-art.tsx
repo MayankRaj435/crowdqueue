@@ -105,7 +105,7 @@ type AsciiPixel = {
 
 export const AsciiArt: React.FC<AsciiArtProps> = ({
   src,
-  resolution = 80,
+  resolution = 50,
   charset = "standard",
   color = "#ffffff",
   backgroundColor = "transparent",

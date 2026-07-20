@@ -45,10 +45,11 @@ export function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 28 }}
       className={cn(
-        "fixed z-50 transition-all duration-300 ease-out",
+        "fixed z-50 transition-smooth gpu-layer",
         isScrolled
           ? "top-4 left-0 right-0 mx-auto w-[calc(100%-2rem)] max-w-6xl rounded-2xl border border-white/[0.1] bg-black/50 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
           : "top-0 left-0 right-0 w-full border-b border-white/[0.04] bg-black/20 backdrop-blur-sm"
@@ -65,20 +66,28 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
-                pathname === link.href
-                  ? "text-white bg-white/10"
-                  : "text-neutral-400 hover:text-white hover:bg-white/[0.05]"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "relative px-4 py-2 rounded-full text-sm font-medium transition-smooth",
+                  active ? "text-white" : "text-neutral-400 hover:text-white hover:bg-white/[0.05]"
+                )}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    className="absolute inset-0 rounded-full bg-white/10"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{link.label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="hidden md:flex items-center gap-3">

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { fadeUp } from "@/lib/motion";
 
 export function PageHeader({
   title,
@@ -16,9 +17,9 @@ export function PageHeader({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      variants={fadeUp}
+      initial="hidden"
+      animate="show"
       className={cn(
         "mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between",
         className

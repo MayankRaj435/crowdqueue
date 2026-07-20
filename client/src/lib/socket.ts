@@ -1,18 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { getAccessToken } from "@/api/axiosInstance";
+import { getSocketBaseUrl } from "@/lib/api-config";
 
-function resolveSocketUrl(): string {
-  if (process.env.NEXT_PUBLIC_SOCKET_URL) {
-    return process.env.NEXT_PUBLIC_SOCKET_URL;
-  }
-  const api = process.env.NEXT_PUBLIC_API_URL;
-  if (api) {
-    return api.replace(/\/api\/v1\/?$/, "");
-  }
-  return "http://localhost:5000";
-}
-
-const SOCKET_URL = resolveSocketUrl();
+const SOCKET_URL = getSocketBaseUrl();
 
 let socket: Socket | null = null;
 

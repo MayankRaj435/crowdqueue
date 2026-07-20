@@ -6,16 +6,14 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes');
 const { errorHandler } = require('./middleware/errorHandler');
+const { parseAllowedOrigins, isOriginAllowed } = require('./utils/origins');
 
 const app = express();
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const allowedOrigins = parseAllowedOrigins(process.env.CLIENT_URL);
 
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (isOriginAllowed(origin, allowedOrigins)) {
       return callback(null, true);
     }
 

@@ -191,17 +191,17 @@ The cleanest deployment path is:
 
 ### Recommended env values
 
-**Client on Vercel**
+**Client on Vercel** (for https://crowdqueue.vercel.app)
 ```env
-NEXT_PUBLIC_API_URL=https://your-api-domain.com/api/v1
-NEXT_PUBLIC_SOCKET_URL=https://your-api-domain.com
+NEXT_PUBLIC_API_URL=https://crowdqueue.onrender.com/api/v1
+NEXT_PUBLIC_SOCKET_URL=https://crowdqueue.onrender.com
 ```
 
 **Server on Render / Railway**
 ```env
 NODE_ENV=production
 PORT=5000
-CLIENT_URL=https://your-vercel-app.vercel.app
+CLIENT_URL=https://crowdqueue.vercel.app
 MONGO_URI=mongodb+srv://...
 REDIS_URL=rediss://...
 JWT_SECRET=...
@@ -228,6 +228,7 @@ TWILIO_PHONE=...
 ### Notes
 
 - `CLIENT_URL` can contain multiple comma-separated origins if you need local dev plus production, for example `http://localhost:3000,https://your-vercel-app.vercel.app`.
+- Do **not** add a trailing slash to `CLIENT_URL` values. The server now normalizes origins, but keeping URLs slash-free avoids confusion.
 - The server uses httpOnly refresh cookies, so cross-site production deployments require `sameSite=None` and `secure=true`, which is now handled automatically.
 
 ---

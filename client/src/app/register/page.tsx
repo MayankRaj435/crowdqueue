@@ -5,6 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { FormInput } from "@/components/ui/form-input";
+import { PageShell } from "@/components/ui/page-shell";
+import { PageSkeleton } from "@/components/ui/skeleton";
+import { fadeUp } from "@/lib/motion";
 
 function RegisterForm() {
   const router = useRouter();
@@ -35,15 +39,15 @@ function RegisterForm() {
     { name: "phone", label: "Phone Number", type: "tel", placeholder: "9876543210", maxLength: 10 },
     { name: "email", label: "Email (optional)", type: "email", placeholder: "rahul@example.com" },
     { name: "password", label: "Password", type: "password", placeholder: "••••••••" },
-  ];
+  ] as const;
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-6">
+    <PageShell maxWidth="max-w-md" className="flex min-h-[calc(100vh-5rem)] items-center py-8">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        className="w-full"
       >
         <div className="text-center mb-8">
           <h1 className="font-display text-3xl font-bold text-white mb-2">Create your account</h1>
@@ -53,8 +57,9 @@ function RegisterForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
               className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center"
             >
               {error}
@@ -66,16 +71,15 @@ function RegisterForm() {
               key={field.name}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
+              transition={{ delay: 0.05 + i * 0.06, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              <label className="block text-sm text-neutral-400 mb-2">{field.label}</label>
-              <input
+              <FormInput
+                label={field.label}
                 type={field.type}
                 placeholder={field.placeholder}
-                maxLength={field.maxLength}
+                maxLength={"maxLength" in field ? field.maxLength : undefined}
                 value={form[field.name as keyof typeof form]}
                 onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/20 transition-colors"
                 required={field.name !== "email"}
               />
             </motion.div>
@@ -83,7 +87,7 @@ function RegisterForm() {
 
           <ShimmerButton type="submit" disabled={loading} className="w-full mt-6">
             {loading ? (
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
                 Creating account...
               </span>
@@ -95,22 +99,31 @@ function RegisterForm() {
 
         <p className="mt-6 text-center text-sm text-neutral-500">
           Already have an account?{" "}
-          <Link href={searchParams.get("callbackUrl") ? `/login?callbackUrl=${encodeURIComponent(searchParams.get("callbackUrl")!)}` : "/login"} className="text-white hover:underline">
+          <Link
+            href={
+              searchParams.get("callbackUrl")
+                ? `/login?callbackUrl=${encodeURIComponent(searchParams.get("callbackUrl")!)}`
+                : "/login"
+            }
+            className="text-white hover:underline transition-smooth"
+          >
             Log in
           </Link>
         </p>
       </motion.div>
-    </div>
+    </PageShell>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <PageShell maxWidth="max-w-md">
+          <PageSkeleton rows={5} />
+        </PageShell>
+      }
+    >
       <RegisterForm />
     </Suspense>
   );

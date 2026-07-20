@@ -1,7 +1,8 @@
 import fetchClient, { setAccessToken } from "./axiosInstance";
 import type { PortalRole } from "@/lib/authRoles";
+import { getApiBaseUrl } from "@/lib/api-config";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_URL = getApiBaseUrl();
 
 export const authApi = {
   register: (data: { name: string; phone: string; email?: string; password: string }) =>

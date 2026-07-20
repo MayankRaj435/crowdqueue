@@ -2,16 +2,31 @@
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
+// Single shared style tag — injected once into <head>, not per-component
+let beamStyleInjected = false;
+function injectBeamStyle() {
+  if (beamStyleInjected || typeof document === "undefined") return;
+  beamStyleInjected = true;
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes beam-dash { to { stroke-dashoffset: 0; } }
+    @keyframes beam-pulse { 0% { opacity: 0.3; } 100% { opacity: 0.8; } }
+  `;
+  document.head.appendChild(style);
+}
+
 export function BackgroundBeams({ className }: { className?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    injectBeamStyle();
     const paths = svgRef.current?.querySelectorAll("path");
     paths?.forEach((path, i) => {
       const length = path.getTotalLength();
       path.style.strokeDasharray = `${length}`;
       path.style.strokeDashoffset = `${length}`;
-      path.style.animation = `dash 3s ease-in-out ${i * 0.4}s forwards, pulse 4s ease-in-out ${i * 0.4 + 3}s infinite alternate`;
+      path.style.animation = `beam-dash 3s ease-in-out ${i * 0.5}s forwards, beam-pulse 5s ease-in-out ${i * 0.5 + 3}s infinite alternate`;
+      path.style.willChange = "opacity";
     });
   }, []);
 
@@ -29,8 +44,6 @@ export function BackgroundBeams({ className }: { className?: string }) {
           "M0 300 Q400 100 800 350 T1200 300",
           "M0 500 Q200 300 500 500 T1200 450",
           "M0 200 Q350 400 700 200 T1200 250",
-          "M0 600 Q300 400 600 550 T1200 600",
-          "M0 350 Q250 150 550 350 T1200 350",
         ].map((d, i) => (
           <path
             key={i}
@@ -41,15 +54,6 @@ export function BackgroundBeams({ className }: { className?: string }) {
           />
         ))}
       </svg>
-      <style jsx>{`
-        @keyframes dash {
-          to { stroke-dashoffset: 0; }
-        }
-        @keyframes pulse {
-          0% { opacity: 0.3; }
-          100% { opacity: 0.8; }
-        }
-      `}</style>
     </div>
   );
 }

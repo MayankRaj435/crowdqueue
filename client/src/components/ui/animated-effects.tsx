@@ -19,8 +19,9 @@ export function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, {
-    damping: 60,
-    stiffness: 100,
+    damping: 50,
+    stiffness: 120,
+    mass: 0.8,
   });
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -55,7 +56,36 @@ export function AnimatedCounter({
   );
 }
 
-export function Meteors({ number = 15 }: { number?: number }) {
+// Single shared keyframe — injected once, not once-per-meteor
+let meteorStyleInjected = false;
+function injectMeteorStyle() {
+  if (meteorStyleInjected || typeof document === "undefined") return;
+  meteorStyleInjected = true;
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes meteor-fall {
+      0%   { transform: rotate(215deg) translateX(0); opacity: 1; }
+      70%  { opacity: 1; }
+      100% { transform: rotate(215deg) translateX(-600px); opacity: 0; }
+    }
+    .meteor-streak::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+export function Meteors({ number = 12 }: { number?: number }) {
+  useEffect(() => {
+    injectMeteorStyle();
+  }, []);
+
   const meteors = new Array(number).fill(true);
   const getMeteorStyle = (idx: number) => {
     const seed = idx + 1;
@@ -68,7 +98,7 @@ export function Meteors({ number = 15 }: { number?: number }) {
       left: `${left}%`,
       animationDelay: `${delay}s`,
       animationDuration: `${duration}s`,
-      animation: `meteor ${duration}s linear ${delay}s infinite`,
+      animation: `meteor-fall ${duration}s linear ${delay}s infinite`,
     };
   };
 
@@ -77,26 +107,9 @@ export function Meteors({ number = 15 }: { number?: number }) {
       {meteors.map((_, idx) => (
         <span
           key={idx}
-          className="absolute h-0.5 w-0.5 rounded-full bg-white shadow-[0_0_0_1px_#ffffff10] rotate-[215deg]"
+          className="meteor-streak absolute h-0.5 w-0.5 rounded-full bg-white shadow-[0_0_0_1px_#ffffff10] rotate-[215deg]"
           style={getMeteorStyle(idx)}
-        >
-          <style jsx>{`
-            @keyframes meteor {
-              0% { transform: rotate(215deg) translateX(0); opacity: 1; }
-              70% { opacity: 1; }
-              100% { transform: rotate(215deg) translateX(-600px); opacity: 0; }
-            }
-            span::before {
-              content: '';
-              position: absolute;
-              top: 50%;
-              transform: translateY(-50%);
-              width: 50px;
-              height: 1px;
-              background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent);
-            }
-          `}</style>
-        </span>
+        />
       ))}
     </div>
   );

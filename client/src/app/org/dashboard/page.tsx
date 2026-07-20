@@ -10,6 +10,9 @@ import { AnimatedCounter } from "@/components/ui/animated-effects";
 import { useAuthStore } from "@/store/authStore";
 import { StaffTab } from "@/components/org/StaffTab";
 import { AnalyticsTab } from "@/components/org/AnalyticsTab";
+import { PageShell } from "@/components/ui/page-shell";
+import { CardGridSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import fetchClient from "@/api/axiosInstance";
 
 interface QueueInfo {
@@ -91,22 +94,21 @@ export default function OrgDashboardPage() {
   if (!user?.organizationId) {
     return (
       <ProtectedRoute roles={["org_admin"]} loginRole="admin">
-        <div className="min-h-screen bg-black flex items-center justify-center px-6">
+        <PageShell className="flex min-h-[calc(100vh-5rem)] items-center justify-center">
           <div className="text-center">
             <p className="text-neutral-400 mb-4">You haven&apos;t registered an organization yet.</p>
             <ShimmerButton onClick={() => router.push("/org/register")}>
               Register Organization
             </ShimmerButton>
           </div>
-        </div>
+        </PageShell>
       </ProtectedRoute>
     );
   }
 
   return (
     <ProtectedRoute roles={["org_admin"]} loginRole="admin">
-      <div className="min-h-screen bg-black">
-        <div className="max-w-6xl mx-auto px-6 py-12">
+      <PageShell>
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <div className="flex items-center justify-between">
@@ -209,14 +211,12 @@ export default function OrgDashboardPage() {
 
           {/* Queue List */}
           {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            </div>
+            <CardGridSkeleton count={4} />
           ) : queues.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-neutral-500 text-lg">No queues yet</p>
-              <p className="text-neutral-600 text-sm mt-2">Create your first queue to get started</p>
-            </div>
+            <EmptyState
+              title="No queues yet"
+              description="Create your first queue to get started."
+            />
           ) : (
             <div className="space-y-4">
               {queues.map((queue, i) => (
@@ -315,8 +315,7 @@ export default function OrgDashboardPage() {
               <AnalyticsTab orgId={org._id} />
             </motion.div>
           )}
-        </div>
-      </div>
+      </PageShell>
 
       {/* QR Code Modal */}
       <AnimatePresence>
@@ -329,9 +328,10 @@ export default function OrgDashboardPage() {
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-6"
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+            initial={{ scale: 0.96, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.96, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(e) => e.stopPropagation()}
               className="bg-white p-8 rounded-3xl max-w-sm w-full text-center relative shadow-2xl"
             >

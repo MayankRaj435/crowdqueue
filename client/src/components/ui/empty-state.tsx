@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { fadeUp } from "@/lib/motion";
 
 export function EmptyState({
   title,
@@ -16,8 +17,9 @@ export function EmptyState({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      variants={fadeUp}
+      initial="hidden"
+      animate="show"
       className={cn("text-center py-20", className)}
     >
       <p className="text-neutral-400 text-lg">{title}</p>

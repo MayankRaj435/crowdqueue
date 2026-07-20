@@ -10,7 +10,7 @@ import { PageShell } from "@/components/ui/page-shell";
 import { PageHeader } from "@/components/ui/page-header";
 import { FormInput } from "@/components/ui/form-input";
 import { EmptyState } from "@/components/ui/empty-state";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { CardGridSkeleton } from "@/components/ui/skeleton";
 import { DiscoverMap, type MapOrg } from "@/components/discover/discover-map";
 import { formatWaitTime } from "@/lib/utils";
 import { cn } from "@/lib/utils";
@@ -145,7 +145,7 @@ export default function DiscoverPage() {
         </div>
 
         {loading ? (
-          <LoadingSpinner />
+          <CardGridSkeleton count={6} />
         ) : filtered.length === 0 ? (
           <EmptyState
             title="No queues found nearby"

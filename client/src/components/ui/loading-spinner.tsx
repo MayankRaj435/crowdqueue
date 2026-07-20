@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export function LoadingSpinner({
@@ -10,14 +11,16 @@ export function LoadingSpinner({
   size?: "sm" | "md" | "lg";
 }) {
   const sizeClass =
-    size === "sm" ? "w-5 h-5 border" : size === "lg" ? "w-10 h-10 border-2" : "w-8 h-8 border-2";
+    size === "sm" ? "w-5 h-5" : size === "lg" ? "w-10 h-10" : "w-8 h-8";
 
   return (
     <div className={cn("flex justify-center py-20", className)}>
-      <div
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
         className={cn(
           sizeClass,
-          "border-white/20 border-t-white rounded-full animate-spin"
+          "rounded-full border-2 border-white/15 border-t-white/90 motion-reduce:animate-none"
         )}
         role="status"
         aria-label="Loading"

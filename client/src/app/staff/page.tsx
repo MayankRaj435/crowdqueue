@@ -9,7 +9,7 @@ import { connectSocket } from "@/lib/socket";
 import { PageShell } from "@/components/ui/page-shell";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { CardGridSkeleton } from "@/components/ui/skeleton";
 
 interface QueueItem {
   _id: string;
@@ -108,7 +108,7 @@ export default function StaffDashboardPage() {
           />
 
           {loading ? (
-            <LoadingSpinner />
+            <CardGridSkeleton count={4} />
           ) : queues.length === 0 ? (
             <EmptyState
               title="No queues assigned"
@@ -122,7 +122,7 @@ export default function StaffDashboardPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07 }}
-                  className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6"
+                  className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 transition-smooth hover:border-white/[0.12] hover:bg-white/[0.03]"
                 >
                   {/* Queue Header */}
                   <div className="flex items-start justify-between mb-6">

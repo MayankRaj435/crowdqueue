@@ -80,6 +80,8 @@ export function ExpandableCard() {
                   height={500}
                   src={active.src}
                   alt={active.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-80 lg:h-80 sm:rounded-t-3xl object-cover object-top"
                 />
               </motion.div>
@@ -143,6 +145,8 @@ export function ExpandableCard() {
                   height={100}
                   src={card.src}
                   alt={card.title}
+                  loading="lazy"
+                  decoding="async"
                   className="h-40 w-full sm:h-16 sm:w-16 rounded-xl object-cover object-top"
                 />
               </motion.div>

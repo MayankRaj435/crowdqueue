@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const FLAP_CHARS = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$()-+&=;:'\"%,./?°";
 
 const BOARD_ROWS = 6;
-const BOARD_COLS = 22;
+const BOARD_COLS = 18;
 
 const BASE_COL_DELAY = 30;
 const BASE_ROW_DELAY = 20;
@@ -362,6 +362,9 @@ export function TextFlippingBoard({
   className,
   duration = BASE_TOTAL_S,
 }: TextFlippingBoardProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { margin: "100px" });
+
   const scale = duration / BASE_TOTAL_S;
   const colDelay = BASE_COL_DELAY * scale;
   const rowDelay = BASE_ROW_DELAY * scale;
@@ -410,6 +413,7 @@ export function TextFlippingBoard({
 
   return (
     <div
+      ref={containerRef}
       className={cn(
         "relative mx-auto w-full max-w-3xl rounded-xl bg-neutral-100 p-2 shadow-xl md:rounded-2xl md:p-4 dark:bg-neutral-900 dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.6)]",
         className,
@@ -426,7 +430,7 @@ export function TextFlippingBoard({
             ) : (
               <FlapCell
                 key={`${r}-${c}`}
-                target={cell.value}
+                target={isInView ? cell.value : " "}
                 delay={c * colDelay + r * rowDelay}
                 stepMs={stepMs}
                 flipDuration={flipDur}

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { PageShell } from "@/components/ui/page-shell";
 import fetchClient from "@/api/axiosInstance";
 
 const orgTypes = [
@@ -81,8 +82,7 @@ export default function OrgRegisterPage() {
 
   return (
     <ProtectedRoute loginRole="admin">
-      <div className="min-h-screen bg-black">
-        <div className="max-w-2xl mx-auto px-6 py-12">
+      <PageShell maxWidth="max-w-2xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="font-display text-3xl font-bold text-white mb-2">
               Register Your Organization
@@ -344,8 +344,7 @@ export default function OrgRegisterPage() {
               </div>
             </motion.div>
           )}
-        </div>
-      </div>
+      </PageShell>
     </ProtectedRoute>
   );
 }

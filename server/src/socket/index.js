@@ -3,17 +3,15 @@ const { createAdapter } = require('@socket.io/redis-adapter');
 const { authSocketMiddleware } = require('./authSocket');
 const { registerQueueHandlers } = require('./queueSocket');
 const logger = require('../utils/logger');
+const { parseAllowedOrigins, isOriginAllowed } = require('../utils/origins');
 
 const initSocket = (httpServer, redisClient) => {
-  const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
+  const allowedOrigins = parseAllowedOrigins(process.env.CLIENT_URL);
 
   const io = new Server(httpServer, {
     cors: {
       origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (isOriginAllowed(origin, allowedOrigins)) {
           return callback(null, true);
         }
 

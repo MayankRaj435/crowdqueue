@@ -9,9 +9,7 @@ const DiscoverMapInner = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[420px] rounded-2xl border border-white/[0.08] bg-white/[0.02] flex items-center justify-center">
-        <LoadingSpinner className="py-0" size="md" />
-      </div>
+      <div className="h-[420px] rounded-2xl border border-white/[0.08] bg-white/[0.02] animate-shimmer motion-reduce:animate-none" />
     ),
   }
 );

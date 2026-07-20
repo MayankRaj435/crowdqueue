@@ -2,7 +2,9 @@
 import { useAuthStore } from "@/store/authStore";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 import { getLoginPath, getLoginRoleFromPathname, type PortalRole } from "@/lib/authRoles";
+import { PageSkeleton } from "@/components/ui/skeleton";
 
 export function ProtectedRoute({
   children,
@@ -29,8 +31,8 @@ export function ProtectedRoute({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      <div className="min-h-screen bg-black max-w-6xl mx-auto px-6 py-12">
+        <PageSkeleton rows={4} />
       </div>
     );
   }
@@ -38,5 +40,13 @@ export function ProtectedRoute({
   if (!isAuthenticated) return null;
   if (roles && user && !roles.includes(user.role)) return null;
 
-  return <>{children}</>;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
 }

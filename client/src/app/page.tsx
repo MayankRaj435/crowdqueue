@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
@@ -8,25 +9,27 @@ import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { ShimmerButton, OutlineButton } from "@/components/ui/shimmer-button";
 import { Meteors, AnimatedCounter } from "@/components/ui/animated-effects";
 import { MovingBorder } from "@/components/ui/moving-border";
-import { ExpandableCard } from "@/components/ui/expandable-card";
-import { AsciiArt } from "@/components/ui/ascii-art";
-import TextRevealCardPreview from "@/components/text-reveal-card-demo";
-import TextFlippingBoardDemo from "@/components/text-flipping-board-demo";
-import GlareCardDemo from "@/components/glare-card-demo";
 import { GlareCard } from "@/components/ui/glare-card";
+import TextRevealCardPreview from "@/components/text-reveal-card-demo";
+import GlareCardDemo from "@/components/glare-card-demo";
 
-const stagger = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
+// Heavy below-the-fold sections: dynamically imported to defer their JS bundles
+const ExpandableCard = dynamic(
+  () => import("@/components/ui/expandable-card").then((m) => m.ExpandableCard),
+  { ssr: false, loading: () => <div className="h-64 animate-pulse bg-white/[0.02] rounded-2xl" /> }
+);
+const AsciiArt = dynamic(
+  () => import("@/components/ui/ascii-art").then((m) => m.AsciiArt),
+  { ssr: false, loading: () => <div className="w-full h-full animate-pulse bg-neutral-900 rounded-2xl" /> }
+);
+const TextFlippingBoardDemo = dynamic(
+  () => import("@/components/text-flipping-board-demo"),
+  { ssr: false, loading: () => <div className="h-48 animate-pulse bg-neutral-100 dark:bg-neutral-900 rounded-xl" /> }
+);
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
+import { staggerContainer, fadeUp } from "@/lib/motion";
+
+const stagger = staggerContainer;
 
 const stats = [
   { value: 5, prefix: "2-", suffix: " hrs", decimals: 0, label: "Average daily wait time eliminated" },
@@ -124,7 +127,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <BackgroundBeams />
-        <Meteors number={20} />
+        <Meteors number={8} />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -491,7 +494,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="py-32 border-t border-white/[0.04] relative overflow-hidden">
-        <Meteors number={10} />
+        {/* Meteors removed from CTA — already in hero, no need for duplicates */}
         <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

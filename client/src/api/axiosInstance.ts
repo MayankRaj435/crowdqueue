@@ -1,4 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/api/v1";
+import { getApiBaseUrl } from "@/lib/api-config";
+
+const API_URL = getApiBaseUrl();
 
 let accessToken: string | null = null;
 
@@ -77,11 +79,20 @@ export async function api<T = unknown>(
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  let res = await fetch(url, {
-    ...fetchOptions,
-    headers,
-    credentials: "include",
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      ...fetchOptions,
+      headers,
+      credentials: "include",
+    });
+  } catch {
+    throw new FetchError(
+      "Unable to reach the server. Check your connection or API configuration.",
+      0,
+      "NETWORK_ERROR"
+    );
+  }
 
   if (res.status === 401) {
     if (isRefreshing) {

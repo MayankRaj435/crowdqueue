@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 
 const inputClassName =
-  "w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-colors";
+  "w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/25 focus:ring-2 focus:ring-white/10 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
 export function FormInput({
   className,
