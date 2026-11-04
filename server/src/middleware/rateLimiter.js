@@ -1,9 +1,14 @@
 const rateLimit = require('express-rate-limit');
+const { RedisStore } = require('rate-limit-redis');
+const { redisClient } = require('../config/redis');
 
 const createLimiter = (windowMs, max, message) => {
   return rateLimit({
     windowMs,
     max,
+    store: new RedisStore({
+      sendCommand: (...args) => redisClient.call(...args),
+    }),
     standardHeaders: true,
     legacyHeaders: false,
     message: {

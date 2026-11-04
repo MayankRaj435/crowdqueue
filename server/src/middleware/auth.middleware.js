@@ -2,6 +2,17 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const { sendError } = require('../utils/apiResponse');
 
+const validateJwtSecrets = () => {
+  const required = ['JWT_SECRET', 'JWT_REFRESH_SECRET'];
+  const missing = required.filter((name) => !process.env[name] || process.env[name].length < 32);
+  if (missing.length) {
+    throw new Error(`Missing or weak JWT secret(s): ${missing.join(', ')}`);
+  }
+  if (process.env.JWT_SECRET === process.env.JWT_REFRESH_SECRET) {
+    throw new Error('JWT_SECRET and JWT_REFRESH_SECRET must be different');
+  }
+};
+
 const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -42,4 +53,4 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticate };
+module.exports = { authenticate, validateJwtSecrets };

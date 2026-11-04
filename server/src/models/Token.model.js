@@ -59,6 +59,13 @@ const tokenSchema = new Schema({
 tokenSchema.index({ queueId: 1, status: 1 });
 tokenSchema.index({ userId: 1, status: 1 });
 tokenSchema.index({ queueId: 1, tokenNumber: 1 }, { unique: true });
+tokenSchema.index(
+  { queueId: 1, userId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { status: { $in: ['waiting', 'called', 'serving'] } },
+  }
+);
 tokenSchema.index({ queueId: 1, servedAt: -1 });
 tokenSchema.index({ createdAt: -1 });
 tokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });

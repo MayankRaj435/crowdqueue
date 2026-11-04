@@ -5,31 +5,43 @@ const { calculateWaitTime } = require('./waitTime.service');
 
 const issueToken = async (queueId, userId, organizationId) => {
   const queue = await Queue.findOneAndUpdate(
-    { _id: queueId, status: { $in: ['active'] } },
+    {
+      _id: queueId,
+      status: 'active',
+      $expr: { $lt: [{ $subtract: ['$lastTokenIssued', '$currentToken'] }, '$maxCapacity'] },
+    },
     { $inc: { lastTokenIssued: 1 } },
     { new: true }
   );
 
   if (!queue) {
+    const current = await Queue.findById(queueId).select('status').lean();
+    if (current?.status === 'full') {
+      throw Object.assign(new Error('Queue is full'), { statusCode: 409, code: 'QUEUE_FULL' });
+    }
     throw Object.assign(new Error('Queue is not active'), { statusCode: 400, code: 'QUEUE_NOT_ACTIVE' });
   }
 
   const waiting = queue.lastTokenIssued - queue.currentToken;
-  if (waiting > queue.maxCapacity) {
-    await Queue.findByIdAndUpdate(queueId, { $inc: { lastTokenIssued: -1 } });
-    throw Object.assign(new Error('Queue is full'), { statusCode: 409, code: 'QUEUE_FULL' });
-  }
-
   const estimatedWaitMs = calculateWaitTime(queue, queue.lastTokenIssued);
 
-  const token = await Token.create({
-    queueId,
-    organizationId,
-    userId,
-    tokenNumber: queue.lastTokenIssued,
-    status: 'waiting',
-    estimatedWaitMs,
-  });
+  let token;
+  try {
+    token = await Token.create({
+      queueId,
+      organizationId,
+      userId,
+      tokenNumber: queue.lastTokenIssued,
+      status: 'waiting',
+      estimatedWaitMs,
+    });
+  } catch (err) {
+    await Queue.findOneAndUpdate(
+      { _id: queueId, lastTokenIssued: queue.lastTokenIssued },
+      { $inc: { lastTokenIssued: -1 } }
+    );
+    throw err;
+  }
 
   if (waiting >= queue.maxCapacity) {
     await Queue.findByIdAndUpdate(queueId, { status: 'full' });
@@ -45,11 +57,11 @@ const issueToken = async (queueId, userId, organizationId) => {
 };
 
 const cancelToken = async (tokenId, userId, reason) => {
-  const token = await Token.findOne({
-    _id: tokenId,
-    userId,
-    status: { $in: ['waiting', 'called'] },
-  });
+  const token = await Token.findOneAndUpdate(
+    { _id: tokenId, userId, status: { $in: ['waiting', 'called'] } },
+    { status: 'cancelled', cancelledAt: new Date(), cancelReason: reason || '' },
+    { new: true }
+  );
 
   if (!token) {
     throw Object.assign(new Error('Token not found or cannot be cancelled'), {
@@ -58,12 +70,15 @@ const cancelToken = async (tokenId, userId, reason) => {
     });
   }
 
-  token.status = 'cancelled';
-  token.cancelledAt = new Date();
-  token.cancelReason = reason || '';
-  await token.save();
-
   await invalidateQueueCache(token.queueId);
+  await Queue.findOneAndUpdate(
+    {
+      _id: token.queueId,
+      status: 'full',
+      $expr: { $lt: [{ $subtract: ['$lastTokenIssued', '$currentToken'] }, '$maxCapacity'] },
+    },
+    { status: 'active' }
+  );
 
   return token;
 };

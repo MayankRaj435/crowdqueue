@@ -17,6 +17,7 @@ const getQueueState = async (queueId) => {
 
   const queue = await Queue.findById(queueId)
     .select('name status currentToken lastTokenIssued avgServiceTimeMs maxCapacity totalServedToday noShowCountToday notifyThreshold organizationId')
+    .populate('organizationId', 'name type')
     .lean();
 
   if (!queue) return null;

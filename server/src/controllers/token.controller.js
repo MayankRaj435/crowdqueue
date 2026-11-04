@@ -3,6 +3,14 @@ const Queue = require('../models/Queue.model');
 const { issueToken, cancelToken } = require('../services/token.service');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
 const { emitQueueUpdate, emitToStaff } = require('../socket/queueSocket');
+const Joi = require('joi');
+
+const tokenQuerySchema = Joi.object({ status: Joi.string().valid('active', 'past').optional() });
+const cancelTokenSchema = Joi.object({ reason: Joi.string().trim().max(200).allow('').optional() });
+const rateTokenSchema = Joi.object({
+  rating: Joi.number().integer().min(1).max(5).required(),
+  feedback: Joi.string().trim().max(500).allow('').optional(),
+});
 
 const joinQueue = async (req, res, next) => {
   try {
@@ -90,7 +98,9 @@ const getTokenById = async (req, res, next) => {
       .populate('organizationId', 'name type address')
       .lean();
 
-    if (!token) return sendError(res, 'TOKEN_NOT_FOUND', 'Token not found', 404);
+    if (!token || String(token.userId) !== String(req.user.userId)) {
+      return sendError(res, 'TOKEN_NOT_FOUND', 'Token not found', 404);
+    }
     sendSuccess(res, { token });
   } catch (err) {
     next(err);
@@ -115,10 +125,9 @@ const cancelTokenHandler = async (req, res, next) => {
 
 const rateToken = async (req, res, next) => {
   try {
-    const { rating, feedback } = req.body;
-    if (!rating || rating < 1 || rating > 5) {
-      return sendError(res, 'INVALID_RATING', 'Rating must be between 1 and 5', 400);
-    }
+    const { error, value } = rateTokenSchema.validate(req.body);
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
+    const { rating, feedback } = value;
 
     const token = await Token.findOneAndUpdate(
       { _id: req.params.id, userId: req.user.userId, status: 'served' },
@@ -133,4 +142,13 @@ const rateToken = async (req, res, next) => {
   }
 };
 
-module.exports = { joinQueue, getMyTokens, getTokenById, cancelToken: cancelTokenHandler, rateToken };
+module.exports = {
+  joinQueue,
+  getMyTokens,
+  getTokenById,
+  cancelToken: cancelTokenHandler,
+  rateToken,
+  tokenQuerySchema,
+  cancelTokenSchema,
+  rateTokenSchema,
+};

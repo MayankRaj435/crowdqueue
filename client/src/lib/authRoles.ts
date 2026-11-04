@@ -68,6 +68,11 @@ export const getLoginPath = (role: PortalRole) => `/login/${role}`;
 
 export const getDefaultRedirectForRole = (role: PortalRole) => LOGIN_ROLE_CONFIG[role].defaultRedirect;
 
+export const getSafeCallbackUrl = (value: string | null, fallback: string) => {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) return fallback;
+  return value;
+};
+
 export const getLoginRoleFromPathname = (pathname: string): PortalRole => {
   if (pathname.startsWith("/staff")) return "staff";
   if (pathname.startsWith("/org")) return "admin";

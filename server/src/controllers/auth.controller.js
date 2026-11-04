@@ -1,9 +1,10 @@
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/User.model');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
-const { DEFAULTS } = require('../config/constants');
+const { sendSms, isSmsEnabled } = require('../services/sms.service');
 const logger = require('../utils/logger');
 
 const registerSchema = Joi.object({
@@ -20,6 +21,23 @@ const loginSchema = Joi.object({
   password: Joi.string().required(),
   portalRole: Joi.string().valid('customer', 'staff', 'admin').optional(),
 });
+
+const otpSchema = Joi.object({
+  code: Joi.string().pattern(/^\d{6}$/).required(),
+});
+
+const generatePhoneOtp = async (user) => {
+  const code = String(crypto.randomInt(100000, 1000000));
+  const phoneOtpHash = await bcrypt.hash(code, 10);
+  await User.findByIdAndUpdate(user._id, {
+    phoneOtpHash,
+    phoneOtpExpiresAt: new Date(Date.now() + 10 * 60 * 1000),
+  });
+  if (isSmsEnabled) {
+    const to = user.phone.startsWith('+') ? user.phone : `+91${user.phone}`;
+    await sendSms(to, `CrowdQueue verification code: ${code}. It expires in 10 minutes.`);
+  }
+};
 
 const portalRoleMap = {
   customer: ['citizen'],
@@ -85,6 +103,7 @@ const register = async (req, res, next) => {
 
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
     await User.findByIdAndUpdate(user._id, { refreshTokenHash });
+    await generatePhoneOtp(user);
 
     res.cookie('refreshToken', refreshToken, refreshCookieOptions);
 
@@ -217,12 +236,25 @@ const refreshTokenHandler = async (req, res, next) => {
 
 const verifyPhone = async (req, res, next) => {
   try {
-    const { code } = req.body;
-    if (code !== DEFAULTS.DEV_OTP_CODE) {
+    const { error, value } = otpSchema.validate(req.body);
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
+    const { code } = value;
+    const user = await User.findById(req.user.userId).select('isPhoneVerified phoneOtpHash phoneOtpExpiresAt');
+    const devCodeAllowed = process.env.NODE_ENV !== 'production' && process.env.DEV_OTP_CODE;
+    const validDevCode = devCodeAllowed && code === process.env.DEV_OTP_CODE;
+    const validStoredCode = user?.phoneOtpHash
+      && user.phoneOtpExpiresAt
+      && user.phoneOtpExpiresAt > new Date()
+      && await bcrypt.compare(code, user.phoneOtpHash);
+    if (!user || (!validDevCode && !validStoredCode)) {
       return sendError(res, 'INVALID_OTP', 'Invalid verification code', 400);
     }
 
-    await User.findByIdAndUpdate(req.user.userId, { isPhoneVerified: true });
+    await User.findByIdAndUpdate(req.user.userId, {
+      isPhoneVerified: true,
+      phoneOtpHash: null,
+      phoneOtpExpiresAt: null,
+    });
     sendSuccess(res, null, 'Phone verified successfully');
   } catch (err) {
     next(err);
@@ -243,4 +275,18 @@ const getMe = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, logout, refreshToken: refreshTokenHandler, verifyPhone, getMe };
+const sendPhoneOtp = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.userId).select('phone isPhoneVerified');
+    if (!user) return sendError(res, 'USER_NOT_FOUND', 'User not found', 404);
+    if (user.isPhoneVerified) return sendError(res, 'ALREADY_VERIFIED', 'Phone is already verified', 409);
+    await generatePhoneOtp(user);
+    sendSuccess(res, null, 'Verification code sent');
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  register, login, logout, refreshToken: refreshTokenHandler, verifyPhone, sendPhoneOtp, getMe,
+};

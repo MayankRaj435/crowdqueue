@@ -7,7 +7,7 @@ import { queueApi } from "@/api/queueApi";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { formatWaitTime, getStatusColor } from "@/lib/utils";
-import { connectSocket, getSocket } from "@/lib/socket";
+import { connectSocket } from "@/lib/socket";
 import Link from "next/link";
 import { getAccessToken } from "@/api/axiosInstance";
 import { PageShell } from "@/components/ui/page-shell";
@@ -56,9 +56,12 @@ export default function QueueDetailPage() {
   const [joining, setJoining] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [joinError, setJoinError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [cancelError, setCancelError] = useState("");
   const [justCalled, setJustCalled] = useState(false);
 
   const fetchData = useCallback(async () => {
+    setLoadError("");
     try {
       const [qRes, tokenRes] = await Promise.all([
         queueApi.getById(id),
@@ -71,15 +74,18 @@ export default function QueueDetailPage() {
       const myTokens = (tokenRes.data as { tokens: MyToken[] }).tokens || [];
       const existing = myTokens.find((t) => t.queueId?._id === id);
       setMyToken(existing || null);
-    } catch {
-      // ignore
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Unable to load this queue.");
     } finally {
       setLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
-    fetchData();
+    const timer = window.setTimeout(() => {
+      void fetchData();
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [fetchData]);
 
   // Real-time Socket.io
@@ -141,14 +147,15 @@ export default function QueueDetailPage() {
   const handleCancel = async () => {
     if (!myToken) return;
     setCancelling(true);
+    setCancelError("");
     try {
       await tokenApi.cancel(myToken._id, "User cancelled");
       setMyToken(null);
       setQueue((prev) =>
         prev ? { ...prev, waiting: Math.max(0, prev.waiting - 1) } : prev
       );
-    } catch {
-      // ignore
+    } catch (err) {
+      setCancelError(err instanceof Error ? err.message : "Unable to leave the queue.");
     } finally {
       setCancelling(false);
     }
@@ -186,16 +193,25 @@ export default function QueueDetailPage() {
             <LoadingSpinner className="py-32" />
           ) : !queue ? (
             <EmptyState
-              title="Queue not found"
-              description="This queue may have been removed or closed."
+              title={loadError ? "Unable to load queue" : "Queue not found"}
+              description={loadError || "This queue may have been removed or closed."}
               action={
-                <button
-                  type="button"
-                  onClick={() => router.push("/discover")}
-                  className="text-sm text-neutral-400 hover:text-white border border-white/10 px-4 py-2 rounded-full"
-                >
-                  Back to Discover
-                </button>
+                <div className="flex justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => fetchData()}
+                    className="text-sm text-neutral-400 hover:text-white border border-white/10 px-4 py-2 rounded-full"
+                  >
+                    Retry
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => router.push("/discover")}
+                    className="text-sm text-neutral-400 hover:text-white border border-white/10 px-4 py-2 rounded-full"
+                  >
+                    Back to Discover
+                  </button>
+                </div>
               }
             />
           ) : (
@@ -328,13 +344,18 @@ export default function QueueDetailPage() {
                     )}
 
                     {myToken.status === "waiting" && (
-                      <button
-                        onClick={handleCancel}
-                        disabled={cancelling}
-                        className="w-full py-2.5 rounded-xl text-sm font-medium text-red-400 border border-red-400/20 hover:bg-red-400/10 transition-colors disabled:opacity-50"
-                      >
-                        {cancelling ? "Cancelling..." : "Leave Queue"}
-                      </button>
+                      <>
+                        {cancelError && (
+                          <p className="mb-2 text-center text-sm text-red-400">{cancelError}</p>
+                        )}
+                        <button
+                          onClick={handleCancel}
+                          disabled={cancelling}
+                          className="w-full py-2.5 rounded-xl text-sm font-medium text-red-400 border border-red-400/20 hover:bg-red-400/10 transition-colors disabled:opacity-50"
+                        >
+                          {cancelling ? "Cancelling..." : "Leave Queue"}
+                        </button>
+                      </>
                     )}
 
                     {myToken.status === "called" && (
