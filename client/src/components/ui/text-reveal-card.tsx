@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo, useRef, memo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, memo } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -40,6 +40,9 @@ export const TextRevealCard = ({
 }) => {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const isTrackingRef = useRef(false);
+  const activeRectRef = useRef<DOMRect | null>(null);
+  const pendingPercentRef = useRef<number | null>(null);
+  const frameRef = useRef<number | null>(null);
   const rawX = useMotionValue(0);
 
   const clipRight = useTransform(rawX, (v) => 100 - v);
@@ -50,20 +53,39 @@ export const TextRevealCard = ({
   const overlayOpacity = useTransform(rawX, [0, 3], [0, 1], { clamp: true });
   const lineOpacity = useTransform(rawX, [0, 2], [0, 1], { clamp: true });
 
-  const clientXToPercent = useCallback((clientX: number) => {
-    if (!cardRef.current) return null;
-    const rect = cardRef.current.getBoundingClientRect();
+  const getPercentFromRect = useCallback((clientX: number, rect: DOMRect) => {
     if (!rect.width) return null;
     const relativeX = clientX - rect.left;
     return Math.min(100, Math.max(0, (relativeX / rect.width) * 100));
   }, []);
 
-  const setFromClientX = useCallback(
+  const refreshRect = useCallback(() => {
+    if (!cardRef.current) return null;
+    const rect = cardRef.current.getBoundingClientRect();
+    activeRectRef.current = rect;
+    return rect;
+  }, []);
+
+  const clientXToPercent = useCallback(
     (clientX: number) => {
-      const pct = clientXToPercent(clientX);
-      if (pct !== null) rawX.set(pct);
+      const rect = activeRectRef.current ?? refreshRect();
+      if (!rect) return null;
+      return getPercentFromRect(clientX, rect);
     },
-    [clientXToPercent, rawX]
+    [getPercentFromRect, refreshRect]
+  );
+
+  const schedulePercentUpdate = useCallback(
+    (nextPercent: number) => {
+      pendingPercentRef.current = nextPercent;
+      if (frameRef.current !== null) return;
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null;
+        const pending = pendingPercentRef.current;
+        if (pending !== null) rawX.set(pending);
+      });
+    },
+    [rawX]
   );
 
   /** Fresh reveal (x≈0) only arms from the left edge; in-progress scrubs resume on drag */
@@ -92,11 +114,14 @@ export const TextRevealCard = ({
 
   function pointerMoveHandler(event: React.PointerEvent<HTMLDivElement>) {
     if (!isTrackingRef.current) return;
-    setFromClientX(event.clientX);
+    const pct = clientXToPercent(event.clientX);
+    if (pct !== null) schedulePercentUpdate(pct);
   }
 
   function pointerLeaveHandler() {
     isTrackingRef.current = false;
+    activeRectRef.current = null;
+    pendingPercentRef.current = null;
   }
 
   function pointerUpHandler(event: React.PointerEvent<HTMLDivElement>) {
@@ -107,16 +132,26 @@ export const TextRevealCard = ({
   }
 
   function pointerDownHandler(event: React.PointerEvent<HTMLDivElement>) {
+    refreshRect();
     if (tryStartTracking(event.clientX, { allowResume: true })) {
       event.currentTarget.setPointerCapture(event.pointerId);
     }
   }
 
   function pointerEnterHandler(event: React.PointerEvent<HTMLDivElement>) {
+    refreshRect();
     if (rawX.get() < 0.5) {
       tryStartTracking(event.clientX);
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div
