@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const Organization = require('../models/Organization.model');
 const Queue = require('../models/Queue.model');
 const User = require('../models/User.model');
+const Token = require('../models/Token.model');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
 const { createGeoPoint } = require('../utils/geoUtils');
 const { DEFAULTS } = require('../config/constants');
@@ -26,6 +27,34 @@ const registerOrgSchema = Joi.object({
     open: Joi.string(),
     close: Joi.string(),
   })).optional(),
+});
+const updateOrgSchema = Joi.object({
+  name: Joi.string().trim().min(2).max(200),
+  description: Joi.string().max(1000).allow(''),
+  phone: Joi.string().max(30).allow(''),
+  email: Joi.string().email().allow(''),
+  operatingHours: Joi.array().items(Joi.object({
+    day: Joi.number().integer().min(0).max(6).required(),
+    open: Joi.string().required(),
+    close: Joi.string().required(),
+  })),
+  address: Joi.object({
+    line1: Joi.string().required(), city: Joi.string().required(),
+    state: Joi.string().required(), pincode: Joi.string().pattern(/^\d{6}$/),
+  }),
+  longitude: Joi.number().min(-180).max(180),
+  latitude: Joi.number().min(-90).max(90),
+}).min(1);
+const staffSchema = Joi.object({
+  name: Joi.string().trim().min(2).max(100).required(),
+  phone: Joi.string().pattern(/^[6-9]\d{9}$/).required(),
+  password: Joi.string().min(6).max(128).required(),
+});
+const nearbyQuerySchema = Joi.object({
+  lng: Joi.number().min(-180).max(180).required(),
+  lat: Joi.number().min(-90).max(90).required(),
+  radius: Joi.number().integer().min(1).max(100000).default(DEFAULTS.NEARBY_RADIUS_METERS),
+  type: Joi.string().valid('all', 'hospital', 'rto', 'bank', 'government', 'other').default('all'),
 });
 
 const registerOrg = async (req, res, next) => {
@@ -61,12 +90,10 @@ const registerOrg = async (req, res, next) => {
 
 const getNearbyOrgs = async (req, res, next) => {
   try {
-    const { lng, lat, radius, type } = req.query;
-    if (!lng || !lat) {
-      return sendError(res, 'MISSING_LOCATION', 'Longitude and latitude are required', 400);
-    }
-
-    const maxDistance = parseInt(radius) || DEFAULTS.NEARBY_RADIUS_METERS;
+    const { error, value } = nearbyQuerySchema.validate(req.query);
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
+    const { lng, lat, radius, type } = value;
+    const maxDistance = radius;
 
     const filter = {
       location: {
@@ -150,13 +177,14 @@ const updateOrg = async (req, res, next) => {
       return sendError(res, 'FORBIDDEN', 'You are not the admin of this organization', 403);
     }
 
-    const allowedFields = ['name', 'description', 'phone', 'email', 'operatingHours', 'address'];
-    const updates = {};
-    allowedFields.forEach((field) => {
-      if (req.body[field] !== undefined) updates[field] = req.body[field];
-    });
+    const { error, value } = updateOrgSchema.validate(req.body, { stripUnknown: true });
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
+    const updates = { ...value };
 
-    if (req.body.longitude && req.body.latitude) {
+    if ((req.body.longitude === undefined) !== (req.body.latitude === undefined)) {
+      return sendError(res, 'VALIDATION_ERROR', 'Longitude and latitude must be provided together', 400);
+    }
+    if (req.body.longitude !== undefined && req.body.latitude !== undefined) {
       updates.location = createGeoPoint(req.body.longitude, req.body.latitude);
     }
 
@@ -176,7 +204,9 @@ const createStaff = async (req, res, next) => {
     if (!org) return sendError(res, 'ORG_NOT_FOUND', 'Organization not found', 404);
     if (String(org.adminId) !== req.user.userId) return sendError(res, 'FORBIDDEN', 'Only admin can add staff', 403);
 
-    const { name, phone, password } = req.body;
+    const { error, value } = staffSchema.validate(req.body);
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
+    const { name, phone, password } = value;
     
     let user = await User.findOne({ phone });
     if (user) {
@@ -223,32 +253,73 @@ const getAnalytics = async (req, res, next) => {
     if (String(org.adminId) !== req.user.userId) return sendError(res, 'FORBIDDEN', 'Only admin can view analytics', 403);
 
     const queues = await Queue.find({ organizationId: org._id }).lean();
-    
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+    start.setUTCDate(start.getUTCDate() - 6);
+
+    const dailyStats = await Token.aggregate([
+      {
+        $match: {
+          organizationId: org._id,
+          createdAt: { $gte: start },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } },
+          issued: { $sum: 1 },
+          served: { $sum: { $cond: [{ $eq: ['$status', 'served'] }, 1, 0] } },
+          dropOffs: {
+            $sum: {
+              $cond: [{ $in: ['$status', ['cancelled', 'no_show', 'skipped']] }, 1, 0],
+            },
+          },
+          avgWaitTimeMs: { $avg: '$actualWaitMs' },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const statsByDate = new Map(dailyStats.map((stat) => [stat._id, stat]));
     const today = new Date();
-    const mockData = Array.from({ length: 7 }).map((_, i) => {
-      const d = new Date(today);
-      d.setDate(d.getDate() - (6 - i));
-      const dateStr = d.toLocaleDateString('en-US', { weekday: 'short' });
-      
+    const chartData = Array.from({ length: 7 }).map((_, i) => {
+      const date = new Date(today);
+      date.setUTCHours(0, 0, 0, 0);
+      date.setUTCDate(date.getUTCDate() - (6 - i));
+      const key = date.toISOString().slice(0, 10);
+      const stat = statsByDate.get(key);
+
       return {
-        date: dateStr,
-        served: Math.floor(Math.random() * 50) + (i === 6 ? queues.reduce((sum, q) => sum + (q.totalServedToday || 0), 0) : 0),
-        avgWaitTimeMinutes: Math.floor(Math.random() * 20) + 10,
-        dropOffs: Math.floor(Math.random() * 10),
+        date: date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }),
+        served: stat?.served || 0,
+        avgWaitTimeMinutes: Math.round((stat?.avgWaitTimeMs || 0) / 60000),
+        dropOffs: stat?.dropOffs || 0,
       };
     });
+
+    const todayKey = today.toISOString().slice(0, 10);
+    const todayStats = statsByDate.get(todayKey);
+    const totalIssued = dailyStats.reduce((sum, stat) => sum + stat.issued, 0);
+    const totalServedToday = todayStats?.served || 0;
+    const avgServiceTimeGlobal = queues.length
+      ? queues.reduce((sum, q) => sum + (q.avgServiceTimeMs || 0), 0) / queues.length
+      : 0;
 
     sendSuccess(res, { 
       overview: {
         totalQueues: queues.length,
-        totalServedToday: queues.reduce((sum, q) => sum + (q.totalServedToday || 0), 0),
-        avgServiceTimeGlobal: queues.length ? queues.reduce((sum, q) => sum + (q.avgServiceTimeMs || 0), 0) / queues.length : 0,
+        totalServedToday,
+        avgServiceTimeGlobal,
+        completionRate: totalIssued ? (dailyStats.reduce((sum, stat) => sum + stat.served, 0) / totalIssued) * 100 : 0,
       },
-      chartData: mockData
+      chartData,
     });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { registerOrg, getNearbyOrgs, getOrgById, updateOrg, createStaff, getStaff, getAnalytics };
+module.exports = {
+  registerOrg, getNearbyOrgs, getOrgById, updateOrg, createStaff, getStaff, getAnalytics,
+  updateOrgSchema, staffSchema, nearbyQuerySchema,
+};

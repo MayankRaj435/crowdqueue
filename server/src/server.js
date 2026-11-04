@@ -5,10 +5,12 @@ const { connectDB } = require('./config/db');
 const { redisClient } = require('./config/redis');
 const { initSocket } = require('./socket');
 const logger = require('./utils/logger');
+const { validateJwtSecrets } = require('./middleware/auth.middleware');
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
+  validateJwtSecrets();
   await connectDB();
   await redisClient.ping();
   logger.info('Redis connected');

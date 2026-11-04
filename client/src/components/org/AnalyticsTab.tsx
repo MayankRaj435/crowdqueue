@@ -4,17 +4,32 @@ import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import fetchClient from "@/api/axiosInstance";
 
+type AnalyticsOverview = {
+  totalQueues: number;
+  totalServedToday: number;
+  avgServiceTimeGlobal: number;
+  completionRate: number;
+};
+
+type AnalyticsPoint = {
+  date: string;
+  served: number;
+  avgWaitTimeMinutes: number;
+  dropOffs: number;
+};
+
 export function AnalyticsTab({ orgId }: { orgId: string }) {
-  const [data, setData] = useState<{ overview: any; chartData: any[] } | null>(null);
+  const [data, setData] = useState<{ overview: AnalyticsOverview; chartData: AnalyticsPoint[] } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
         const res = await fetchClient.get(`/orgs/${orgId}/analytics`);
-        setData(res.data as any);
+        setData(res.data as { overview: AnalyticsOverview; chartData: AnalyticsPoint[] });
       } catch (err) {
-        console.error(err);
+        setError(err instanceof Error ? err.message : "Unable to load analytics.");
       } finally {
         setLoading(false);
       }
@@ -24,6 +39,10 @@ export function AnalyticsTab({ orgId }: { orgId: string }) {
 
   if (loading) {
     return <div className="flex justify-center py-20"><div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>;
+  }
+
+  if (error) {
+    return <p className="py-20 text-center text-sm text-red-400">{error}</p>;
   }
 
   if (!data) return null;
@@ -36,15 +55,17 @@ export function AnalyticsTab({ orgId }: { orgId: string }) {
           <p className="text-4xl font-display font-bold text-white">{data.overview.totalServedToday}</p>
         </div>
         <div className="p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02]">
-          <p className="text-sm text-neutral-500 mb-2">Avg Wait Time</p>
+          <p className="text-sm text-neutral-500 mb-2">Avg Service Time</p>
           <p className="text-4xl font-display font-bold text-white">
             {Math.round(data.overview.avgServiceTimeGlobal / 60000) || 0}
             <span className="text-xl text-neutral-500 font-normal ml-2">min</span>
           </p>
         </div>
         <div className="p-6 rounded-2xl border border-emerald-500/10 bg-emerald-500/5">
-          <p className="text-sm text-emerald-500/70 mb-2">Queue Efficiency</p>
-          <p className="text-4xl font-display font-bold text-emerald-400">94%</p>
+          <p className="text-sm text-emerald-500/70 mb-2">Completion Rate</p>
+          <p className="text-4xl font-display font-bold text-emerald-400">
+            {Math.round(data.overview.completionRate || 0)}%
+          </p>
         </div>
       </div>
 
@@ -74,7 +95,7 @@ export function AnalyticsTab({ orgId }: { orgId: string }) {
         </div>
 
         <div className="p-6 rounded-2xl border border-white/[0.06] bg-[#0A0A0A]">
-          <h3 className="text-lg font-semibold text-white mb-6">Average Wait Time (Mins)</h3>
+          <h3 className="text-lg font-semibold text-white mb-6">Average Service Time (Mins)</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data.chartData}>

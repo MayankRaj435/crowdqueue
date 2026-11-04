@@ -47,9 +47,14 @@ export default function QueueDisplayPage() {
   }, [id]);
 
   useEffect(() => {
-    fetchQueue();
+    const timer = window.setTimeout(() => {
+      void fetchQueue();
+    }, 0);
     const interval = setInterval(fetchQueue, 4000);
-    return () => clearInterval(interval);
+    return () => {
+      window.clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, [fetchQueue]);
 
   const messages = useMemo(() => {
@@ -68,10 +73,6 @@ export default function QueueDisplayPage() {
     const t = setInterval(() => setMsgIndex((i) => i + 1), 8000);
     return () => clearInterval(t);
   }, []);
-
-  useEffect(() => {
-    setMsgIndex(0);
-  }, [boardText]);
 
   return (
     <div className="min-h-screen bg-black flex flex-col">

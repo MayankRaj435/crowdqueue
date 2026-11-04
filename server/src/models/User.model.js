@@ -57,6 +57,8 @@ const userSchema = new Schema({
   },
   lastLoginAt: Date,
   refreshTokenHash: String,
+  phoneOtpHash: String,
+  phoneOtpExpiresAt: Date,
 }, { timestamps: true });
 
 userSchema.index({ role: 1, isActive: 1 });

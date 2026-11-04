@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import { FormInput } from "@/components/ui/form-input";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { PageShell } from "@/components/ui/page-shell";
-import { getDefaultRedirectForRole, type LoginRoleConfig } from "@/lib/authRoles";
+import { getDefaultRedirectForRole, getSafeCallbackUrl, type LoginRoleConfig } from "@/lib/authRoles";
 
 type RoleLoginFormProps = {
   config: LoginRoleConfig;
@@ -29,8 +29,11 @@ export function RoleLoginForm({ config }: RoleLoginFormProps) {
 
     try {
       await login(form.phone, form.password, config.role);
-      const callbackUrl = searchParams.get("callbackUrl");
-      router.push(callbackUrl || getDefaultRedirectForRole(config.role));
+      const callbackUrl = getSafeCallbackUrl(
+        searchParams.get("callbackUrl"),
+        getDefaultRedirectForRole(config.role)
+      );
+      router.push(callbackUrl);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Login failed";
       setError(msg);

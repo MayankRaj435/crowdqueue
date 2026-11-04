@@ -35,6 +35,7 @@ export default function StaffDashboardPage() {
   const [calling, setCalling] = useState<Record<string, boolean>>({});
   const [calledLog, setCalledLog] = useState<Record<string, CalledInfo | null>>({});
   const [error, setError] = useState<Record<string, string>>({});
+  const [statusError, setStatusError] = useState<Record<string, string>>({});
 
   const fetchQueues = useCallback(async () => {
     try {
@@ -51,8 +52,10 @@ export default function StaffDashboardPage() {
     fetchQueues();
   }, [fetchQueues]);
 
+  const queueIds = queues.map((q) => q._id).join(",");
+
   useEffect(() => {
-    if (queues.length === 0) return;
+    if (!queueIds) return;
     const socket = connectSocket();
 
     const onStateUpdate = (state: QueueItem & { _id: string }) => {
@@ -62,15 +65,15 @@ export default function StaffDashboardPage() {
     };
 
     socket.on("queue:state_update", onStateUpdate);
-    queues.forEach((q) => {
-      socket.emit("join_staff_room", { queueId: q._id });
-      socket.emit("join_queue_room", { queueId: q._id });
+    queueIds.split(",").forEach((queueId) => {
+      socket.emit("join_staff_room", { queueId });
+      socket.emit("join_queue_room", { queueId });
     });
 
     return () => {
       socket.off("queue:state_update", onStateUpdate);
     };
-  }, [queues.map((q) => q._id).join(",")]);
+  }, [queueIds]);
 
   const handleCallNext = async (queueId: string) => {
     setCalling((prev) => ({ ...prev, [queueId]: true }));
@@ -91,11 +94,15 @@ export default function StaffDashboardPage() {
 
   const handleStatusToggle = async (queueId: string, currentStatus: string) => {
     const newStatus = currentStatus === "active" ? "paused" : "active";
+    setStatusError((prev) => ({ ...prev, [queueId]: "" }));
     try {
       await fetchClient.patch(`/queues/${queueId}/status`, { status: newStatus });
       setQueues((prev) => prev.map((q) => q._id === queueId ? { ...q, status: newStatus } : q));
-    } catch {
-      // ignore
+    } catch (err) {
+      setStatusError((prev) => ({
+        ...prev,
+        [queueId]: err instanceof Error ? err.message : "Unable to update queue status",
+      }));
     }
   };
 
@@ -175,6 +182,9 @@ export default function StaffDashboardPage() {
                   {/* Error */}
                   {error[queue._id] && (
                     <p className="mb-4 text-red-400 text-sm text-center">{error[queue._id]}</p>
+                  )}
+                  {statusError[queue._id] && (
+                    <p className="mb-4 text-red-400 text-sm text-center">{statusError[queue._id]}</p>
                   )}
 
                   {/* Call Next Button */}

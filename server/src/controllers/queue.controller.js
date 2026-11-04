@@ -14,6 +14,13 @@ const createQueueSchema = Joi.object({
   maxCapacity: Joi.number().integer().min(1).max(10000).optional(),
   notifyThreshold: Joi.number().integer().min(1).max(20).optional(),
 });
+const updateQueueSchema = createQueueSchema.fork(['name'], (schema) => schema.optional()).min(1);
+const statusSchema = Joi.object({ status: Joi.string().valid('active', 'paused', 'closed', 'full').required() });
+
+const canManageQueue = (queue, user) => (
+  user.role === 'super_admin'
+  || (user.organizationId && String(queue.organizationId) === String(user.organizationId))
+);
 
 const createQueue = async (req, res, next) => {
   try {
@@ -62,11 +69,8 @@ const updateQueue = async (req, res, next) => {
       return sendError(res, 'FORBIDDEN', 'You do not have permission to update this queue', 403);
     }
 
-    const allowedFields = ['name', 'description', 'maxCapacity', 'notifyThreshold'];
-    const updates = {};
-    allowedFields.forEach((field) => {
-      if (req.body[field] !== undefined) updates[field] = req.body[field];
-    });
+    const { error, value: updates } = updateQueueSchema.validate(req.body, { stripUnknown: true });
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
 
     const updated = await Queue.findByIdAndUpdate(req.params.id, updates, { new: true }).lean();
     await invalidateQueueCache(req.params.id);
@@ -79,17 +83,14 @@ const updateQueue = async (req, res, next) => {
 
 const updateQueueStatus = async (req, res, next) => {
   try {
-    const { status } = req.body;
-    const validStatuses = ['active', 'paused', 'closed'];
-    if (!validStatuses.includes(status)) {
-      return sendError(res, 'INVALID_STATUS', `Status must be one of: ${validStatuses.join(', ')}`, 400);
-    }
+    const { error, value } = statusSchema.validate(req.body);
+    if (error) return sendError(res, 'VALIDATION_ERROR', error.details[0].message, 400);
+    const { status } = value;
 
-    const queue = await Queue.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    ).lean();
+    const existing = await Queue.findById(req.params.id).lean();
+    if (!existing) return sendError(res, 'QUEUE_NOT_FOUND', 'Queue not found', 404);
+    if (!canManageQueue(existing, req.user)) return sendError(res, 'FORBIDDEN', 'You do not have permission to update this queue', 403);
+    const queue = await Queue.findByIdAndUpdate(req.params.id, { status }, { new: true }).lean();
 
     if (!queue) return sendError(res, 'QUEUE_NOT_FOUND', 'Queue not found', 404);
 
@@ -127,7 +128,9 @@ const deleteQueue = async (req, res, next) => {
 
 const getMyQueues = async (req, res, next) => {
   try {
-    const org = await Organization.findOne({ adminId: req.user.userId }).lean();
+    const org = req.user.organizationId
+      ? await Organization.findById(req.user.organizationId).lean()
+      : await Organization.findOne({ adminId: req.user.userId }).lean();
     if (!org) return sendError(res, 'ORG_NOT_FOUND', 'No organization found for your account', 404);
 
     const queues = await Queue.find({ organizationId: org._id }).lean();
@@ -144,46 +147,47 @@ const getMyQueues = async (req, res, next) => {
 
 const callNext = async (req, res, next) => {
   try {
-    const queue = await Queue.findById(req.params.id);
-    if (!queue) return sendError(res, 'QUEUE_NOT_FOUND', 'Queue not found', 404);
-    if (queue.status !== 'active') {
-      return sendError(res, 'QUEUE_NOT_ACTIVE', 'Queue is not active', 400);
-    }
+    const existingQueue = await Queue.findById(req.params.id).lean();
+    if (!existingQueue) return sendError(res, 'QUEUE_NOT_FOUND', 'Queue not found', 404);
+    if (!canManageQueue(existingQueue, req.user)) return sendError(res, 'FORBIDDEN', 'You do not have permission to call tokens for this queue', 403);
 
-    const hasWaiting = queue.lastTokenIssued > queue.currentToken;
-    if (!hasWaiting) {
+    const queue = await Queue.findOneAndUpdate(
+      { _id: req.params.id, status: { $in: ['active', 'full'] }, $expr: { $lt: ['$currentToken', '$lastTokenIssued'] } },
+      { $inc: { currentToken: 1, totalServedToday: 1 }, $set: { status: 'active' } },
+      { new: true }
+    );
+    if (!queue) {
+      if (!['active', 'full'].includes(existingQueue.status)) return sendError(res, 'QUEUE_NOT_ACTIVE', 'Queue is not active', 400);
       return sendError(res, 'NO_WAITING_TOKENS', 'No tokens are waiting in this queue', 404);
     }
+    const newCurrentToken = queue.currentToken;
 
     // Mark currently serving/called token as served
-    const currentlyServing = await Token.findOne({
+    const currentlyServing = await Token.findOneAndUpdate({
       queueId: queue._id,
       status: { $in: ['serving', 'called'] },
-    });
+    }, {
+      status: 'served',
+      servedAt: new Date(),
+    }, { new: true });
     if (currentlyServing) {
-      currentlyServing.status = 'served';
-      currentlyServing.servedAt = new Date();
       if (currentlyServing.calledAt) {
         currentlyServing.actualWaitMs = Date.now() - currentlyServing.calledAt.getTime();
+        await currentlyServing.save();
       }
-      await currentlyServing.save();
     }
 
     // Find next real Token document (real users in queue)
-    const nextToken = await Token.findOne({
+    const nextToken = await Token.findOneAndUpdate({
       queueId: queue._id,
       status: 'waiting',
-    }).sort({ tokenNumber: 1 });
-
-    const newCurrentToken = queue.currentToken + 1;
-    const newServedToday = queue.totalServedToday + 1;
+    }, {
+      status: 'called',
+      calledAt: new Date(),
+    }, { new: true }).sort({ tokenNumber: 1 });
 
     if (nextToken) {
       // Real user — mark their token as called and notify them
-      nextToken.status = 'called';
-      nextToken.calledAt = new Date();
-      await nextToken.save();
-
       const io = req.app.get('io');
       if (io) {
         emitToUser(io, String(nextToken.userId), 'token:called', {
@@ -208,12 +212,6 @@ const callNext = async (req, res, next) => {
     }
 
     // Advance the counter regardless (works for both real and seeded data)
-    await Queue.findByIdAndUpdate(
-      queue._id,
-      { currentToken: newCurrentToken, totalServedToday: newServedToday },
-      { new: true }
-    );
-
     await invalidateQueueCache(req.params.id);
     const newState = await getQueueState(req.params.id);
 
@@ -234,5 +232,7 @@ const callNext = async (req, res, next) => {
   }
 };
 
-module.exports = { createQueue, getQueueById, getMyQueues, updateQueue, updateQueueStatus, deleteQueue, callNext };
-
+module.exports = {
+  createQueue, getQueueById, getMyQueues, updateQueue, updateQueueStatus, deleteQueue, callNext,
+  updateQueueSchema, statusSchema,
+};

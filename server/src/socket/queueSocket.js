@@ -1,5 +1,6 @@
 const { getQueueState } = require('../services/queue.service');
 const logger = require('../utils/logger');
+const Queue = require('../models/Queue.model');
 
 const registerQueueHandlers = (io, socket) => {
   socket.on('join_queue_room', async ({ queueId }) => {
@@ -17,9 +18,20 @@ const registerQueueHandlers = (io, socket) => {
     logger.debug(`User ${socket.data.userId} left queue room ${queueId}`);
   });
 
-  socket.on('join_staff_room', ({ queueId }) => {
-    if (socket.data.role === 'staff' || socket.data.role === 'org_admin') {
+  socket.on('join_staff_room', async ({ queueId }) => {
+    if (socket.data.role === 'super_admin') {
       socket.join(`staff:${queueId}`);
+      return;
+    }
+    if (socket.data.role === 'staff' || socket.data.role === 'org_admin') {
+      try {
+        const queue = await Queue.findById(queueId).select('organizationId').lean();
+        if (queue && String(queue.organizationId) === socket.data.organizationId) {
+          socket.join(`staff:${queueId}`);
+        }
+      } catch (err) {
+        logger.warn(`Staff room join denied: ${err.message}`);
+      }
     }
   });
 };

@@ -7,8 +7,10 @@ const cookieParser = require('cookie-parser');
 const routes = require('./routes');
 const { errorHandler } = require('./middleware/errorHandler');
 const { parseAllowedOrigins, isOriginAllowed } = require('./utils/origins');
+const { generalLimiter } = require('./middleware/rateLimiter');
 
 const app = express();
+app.set('trust proxy', 1);
 const allowedOrigins = parseAllowedOrigins(process.env.CLIENT_URL);
 
 const corsOptions = {
@@ -30,6 +32,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use('/api/v1', generalLimiter);
 app.use('/api/v1', routes);
 
 app.get('/health', (req, res) => {
